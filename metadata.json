@@ -1,0 +1,5 @@
+{
+  "name": "Music Scale Training Engine",
+  "description": "A modular and scalable music scale practice application with skill graph, training engine, and game layer.",
+  "requestFramePermissions": []
+}

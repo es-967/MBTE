@@ -217,6 +217,11 @@ export function IntervalQuiz({ isChallenge, targetLevel, onHome, onPlatformHome 
               : `正確答案：${question.answer.name}`
             }
           </p>
+          {!isCorrect && (
+            <p className="text-sm mt-2 opacity-75">
+              推導：{question.root} 到 {question.note2}，字母距離 {question.answer.deg} 度，半音距離 {question.answer.st} 個 → {question.answer.name}
+            </p>
+          )}
         </div>
       )}
 

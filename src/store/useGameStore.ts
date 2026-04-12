@@ -21,6 +21,7 @@ export const defaultProgress: ModuleProgress = {
 interface GameState {
   progress: Record<string, ModuleProgress>;
   practiceMode: PracticeMode;
+  gender: 'M' | 'F' | null;
   
   addExp: (moduleId: string, amount: number) => void;
   incrementStreak: (moduleId: string) => void;
@@ -28,6 +29,7 @@ interface GameState {
   updateBestScore: (moduleId: string, score: number) => void;
   unlockModule: (moduleId: string) => void;
   setPracticeMode: (mode: PracticeMode) => void;
+  setGender: (gender: 'M' | 'F') => void;
   resetProgress: () => void;
 }
 
@@ -36,6 +38,7 @@ export const useGameStore = create<GameState>()(
     (set) => ({
       progress: {},
       practiceMode: 'major',
+      gender: null,
 
       addExp: (moduleId, amount) => set((state) => {
         const current = state.progress[moduleId] || { ...defaultProgress };
@@ -90,7 +93,8 @@ export const useGameStore = create<GameState>()(
         };
       }),
       setPracticeMode: (mode) => set({ practiceMode: mode }),
-      resetProgress: () => set({ progress: {}, practiceMode: 'major' }),
+      setGender: (gender) => set({ gender }),
+      resetProgress: () => set({ progress: {}, practiceMode: 'major', gender: null }),
     }),
     {
       name: 'music-training-storage',
@@ -105,14 +109,19 @@ export function getGlobalProgress(progress: Record<string, ModuleProgress>, tota
   const MAX_LEVEL = 11;
   let totalCompletion = 0;
   
-  Object.values(progress).forEach(p => {
+  const moduleIds = ['scale-practice', 'interval-practice', 'triad-practice'];
+  
+  moduleIds.forEach(id => {
+    const p = progress[id] || defaultProgress;
     totalExp += p.exp;
     totalStreak += p.streak;
     totalBestScore = Math.max(totalBestScore, p.bestChallengeScore);
-    totalCompletion += Math.min(p.level, MAX_LEVEL) / MAX_LEVEL;
+    // Level 1 is 0% completion, Level 11 is 100% completion
+    const completion = (Math.min(p.level, MAX_LEVEL) - 1) / (MAX_LEVEL - 1);
+    totalCompletion += completion;
   });
 
-  const completionPercentage = Math.round((totalCompletion / totalModules) * 100);
+  const completionPercentage = Math.round((totalCompletion / moduleIds.length) * 100);
 
   return {
     completionPercentage,

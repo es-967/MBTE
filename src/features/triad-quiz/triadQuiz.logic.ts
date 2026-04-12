@@ -55,7 +55,7 @@ export function generateQuestion(level: number): QuizQuestion {
     chordType = CHORD_TYPES[Math.floor(Math.random() * 4)];
   } else if (level < 4) {
     // Level 2-3
-    const allowedRoots = [0, 2, 7]; // C, D, G
+    const allowedRoots = [0, 5, 7]; // C, F, G
     rootSemi = allowedRoots[Math.floor(Math.random() * allowedRoots.length)];
     chordType = CHORD_TYPES[Math.floor(Math.random() * 4)];
   } else if (level < 6) {
@@ -76,6 +76,7 @@ export function generateQuestion(level: number): QuizQuestion {
     // Level 6-8
     rootSemi = Math.floor(Math.random() * 12);
     chordType = CHORD_TYPES[Math.floor(Math.random() * 4)];
+    shuffleNotes = true;
   } else {
     // Level 9+
     rootSemi = Math.floor(Math.random() * 12);

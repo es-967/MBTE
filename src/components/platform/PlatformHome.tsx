@@ -3,6 +3,7 @@ import { TrainingModule } from '../../types/TrainingModule';
 import { useGameStore, getGlobalProgress, defaultProgress } from '../../store/useGameStore';
 import { Card, CardContent } from '../ui/Card';
 import { Progress } from '../ui/Progress';
+import { CharacterCard } from './CharacterCard';
 
 interface PlatformHomeProps {
   modules: TrainingModule[];
@@ -17,8 +18,6 @@ const difficultyLabel = {
 
 export function PlatformHome({ modules, onSelectModule }: PlatformHomeProps) {
   const { progress } = useGameStore();
-  const globalProgress = getGlobalProgress(progress, modules.length);
-  const { completionPercentage, exp, streak, bestChallengeScore } = globalProgress;
   const [showResetConfirm, setShowResetConfirm] = React.useState(false);
 
   return (
@@ -32,31 +31,8 @@ export function PlatformHome({ modules, onSelectModule }: PlatformHomeProps) {
         <p className="text-lg text-slate-500 font-medium">展開你的音樂學習旅程，選擇一個練習開始訓練</p>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="rounded-2xl bg-indigo-50/80 border border-indigo-100 p-4 text-center">
-          <p className="text-sm font-semibold text-indigo-600/80 uppercase tracking-wider mb-1">總完成度</p>
-          <p className="text-4xl font-display font-bold text-indigo-700">{completionPercentage}%</p>
-        </div>
-        <div className="rounded-2xl bg-emerald-50/80 border border-emerald-100 p-4 text-center">
-          <p className="text-sm font-semibold text-emerald-600/80 uppercase tracking-wider mb-1">總經驗值</p>
-          <p className="text-4xl font-display font-bold text-emerald-700">{exp}</p>
-        </div>
-        <div className="rounded-2xl bg-amber-50/80 border border-amber-100 p-4 text-center">
-          <p className="text-sm font-semibold text-amber-600/80 uppercase tracking-wider mb-1">總連勝</p>
-          <p className="text-4xl font-display font-bold text-amber-700">{streak} <span className="text-2xl">🔥</span></p>
-        </div>
-        <div className="rounded-2xl bg-purple-50/80 border border-purple-100 p-4 text-center">
-          <p className="text-sm font-semibold text-purple-600/80 uppercase tracking-wider mb-1">最佳挑戰</p>
-          <p className="text-4xl font-display font-bold text-purple-700">{bestChallengeScore} <span className="text-2xl text-purple-500/70">題</span></p>
-        </div>
-      </div>
-
-      <div className="space-y-2 px-2">
-        <div className="flex justify-between text-sm font-medium text-slate-500">
-          <span className="text-indigo-600 font-bold">訓練進度</span>
-          <span className="text-slate-700 font-bold">{completionPercentage}%</span>
-        </div>
-        <Progress value={completionPercentage} max={100} className="h-3" />
+      <div className="flex justify-center">
+        <CharacterCard />
       </div>
 
       <div className="space-y-6">

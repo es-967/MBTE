@@ -217,6 +217,11 @@ export function TriadQuiz({ isChallenge, targetLevel, onHome, onPlatformHome }: 
               : `正確答案：${correctRoot}${question.answer.chordType.name}（${question.answer.notes.join(' ')}）`
             }
           </p>
+          {!isCorrect && (
+            <p className="text-sm mt-2 opacity-75">
+              結構：{question.answer.notes[0]}→{question.answer.notes[1]}（{question.answer.chordType.steps[0]}半音）+ {question.answer.notes[1]}→{question.answer.notes[2]}（{question.answer.chordType.steps[1]}半音）= {question.answer.chordType.name}
+            </p>
+          )}
         </div>
       )}
 

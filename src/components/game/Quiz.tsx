@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import confetti from 'canvas-confetti';
-import { useGameStore } from '../../store/useGameStore';
+import { useGameStore, defaultProgress } from '../../store/useGameStore';
 import { generateQuestion, Question } from '../../lib/music/generator';
 import { Button } from '../ui/Button';
 import { Card, CardContent } from '../ui/Card';
@@ -9,10 +9,13 @@ interface QuizProps {
   isChallenge: boolean;
   difficulty: 'easy' | 'normal' | 'hard';
   onHome: () => void;
+  onPlatformHome: () => void;
 }
 
-export function Quiz({ isChallenge, difficulty, onHome }: QuizProps) {
-  const { level, practiceMode, addExp, incrementStreak, resetStreak, updateBestScore, streak } = useGameStore();
+export function Quiz({ isChallenge, difficulty, onHome, onPlatformHome }: QuizProps) {
+  const { progress, practiceMode, addExp, incrementStreak, resetStreak, updateBestScore } = useGameStore();
+  const moduleProgress = progress['scale-practice'] || defaultProgress;
+  const { level, streak, bestChallengeScore } = moduleProgress;
   
   const [question, setQuestion] = useState<Question | null>(null);
   const [selectedNotes, setSelectedNotes] = useState<string[]>([]);
@@ -23,9 +26,27 @@ export function Quiz({ isChallenge, difficulty, onHome }: QuizProps) {
   const [challengeScore, setChallengeScore] = useState(0);
   const [isTimeUp, setIsTimeUp] = useState(false);
 
+  const prevLevelRef = React.useRef(level);
+  useEffect(() => {
+    if (level > prevLevelRef.current) {
+      confetti({
+        particleCount: 150,
+        spread: 80,
+        origin: { y: 0.5 },
+        colors: ['#6366f1', '#10b981', '#f59e0b', '#ec4899', '#8b5cf6']
+      });
+    }
+    prevLevelRef.current = level;
+  }, [level]);
+
   useEffect(() => {
     loadNewQuestion();
   }, []);
+
+  const challengeScoreRef = React.useRef(challengeScore);
+  useEffect(() => {
+    challengeScoreRef.current = challengeScore;
+  }, [challengeScore]);
 
   useEffect(() => {
     if (isChallenge && !isTimeUp) {
@@ -34,8 +55,9 @@ export function Quiz({ isChallenge, difficulty, onHome }: QuizProps) {
           if (prev <= 1) {
             clearInterval(timer);
             setIsTimeUp(true);
-            updateBestScore(challengeScore);
-            if (challengeScore > useGameStore.getState().bestChallengeScore) {
+            const finalScore = challengeScoreRef.current;
+            updateBestScore('scale-practice', finalScore);
+            if (finalScore > bestChallengeScore) {
               confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
             }
             return 0;
@@ -45,7 +67,7 @@ export function Quiz({ isChallenge, difficulty, onHome }: QuizProps) {
       }, 1000);
       return () => clearInterval(timer);
     }
-  }, [isChallenge, isTimeUp, challengeScore, updateBestScore]);
+  }, [isChallenge, isTimeUp, updateBestScore, bestChallengeScore]);
 
   const loadNewQuestion = () => {
     const q = generateQuestion(level, practiceMode, difficulty);
@@ -78,15 +100,15 @@ export function Quiz({ isChallenge, difficulty, onHome }: QuizProps) {
       if (isChallenge) {
         setChallengeScore((s) => s + 1);
       } else {
-        addExp(20);
-        incrementStreak();
+        addExp('scale-practice', 20);
+        incrementStreak('scale-practice');
         if (streak + 1 >= 3) {
           confetti({ particleCount: 50, spread: 60, origin: { y: 0.8 } });
         }
       }
     } else {
       if (!isChallenge) {
-        resetStreak();
+        resetStreak('scale-practice');
       }
     }
   };
@@ -97,11 +119,16 @@ export function Quiz({ isChallenge, difficulty, onHome }: QuizProps) {
         <h1 className="text-5xl font-black text-gray-900">⏰ 時間到！</h1>
         <div className="space-y-2">
           <p className="text-2xl font-bold text-blue-600">🎯 你的成績：{challengeScore} 題</p>
-          <p className="text-gray-500">最高紀錄：{Math.max(challengeScore, useGameStore.getState().bestChallengeScore)} 題</p>
+          <p className="text-gray-500">最高紀錄：{Math.max(challengeScore, bestChallengeScore)} 題</p>
         </div>
-        <Button size="lg" onClick={onHome} className="w-full max-w-xs">
-          🏠 回首頁
-        </Button>
+        <div className="flex justify-center gap-4">
+          <Button size="lg" onClick={onHome} className="w-48">
+            🏠 回設定頁
+          </Button>
+          <Button size="lg" variant="outline" onClick={onPlatformHome} className="w-48">
+            🔙 回主頁
+          </Button>
+        </div>
       </div>
     );
   }
@@ -115,36 +142,36 @@ export function Quiz({ isChallenge, difficulty, onHome }: QuizProps) {
       <div className="flex justify-between items-center">
         {isChallenge ? (
           <>
-            <h1 className="text-2xl font-bold text-red-600">⏰ 限時挑戰 - {timeLeft}秒</h1>
-            <div className="text-xl font-bold text-blue-600">得分：{challengeScore}</div>
+            <h1 className="text-3xl font-display font-bold text-rose-600">⏰ 限時挑戰 - {timeLeft}秒</h1>
+            <div className="text-2xl font-display font-bold text-indigo-600">得分：{challengeScore}</div>
           </>
         ) : (
           <>
-            <h1 className="text-2xl font-bold text-gray-900">🎼 {modeText}音階練習</h1>
-            <div className="flex gap-4 text-sm font-medium text-gray-600">
-              <span>連勝: {streak} 🔥</span>
-              <span>Lv{level}</span>
+            <h1 className="text-3xl font-display font-bold text-slate-900">🎼 {modeText}音階練習</h1>
+            <div className="flex gap-4 text-sm font-bold text-slate-600 bg-slate-100 px-4 py-2 rounded-full">
+              <span className="text-amber-600">連勝: {streak} 🔥</span>
+              <span className="text-indigo-600">Lv{level}</span>
             </div>
           </>
         )}
       </div>
 
-      <Card className="border-2 border-blue-100 shadow-md">
-        <CardContent className="p-8 text-center space-y-8">
-          <h2 className="text-2xl font-semibold text-gray-800">
-            請選出 【{question.key} {modeText}】 的音階
+      <Card className="border-2 border-indigo-100 shadow-md">
+        <CardContent className="p-8 text-center space-y-10">
+          <h2 className="text-3xl font-display font-bold text-slate-800">
+            請選出 【<span className="text-indigo-600">{question.key} {modeText}</span>】 的音階
           </h2>
 
-          <div className="flex flex-wrap justify-center gap-3">
+          <div className="flex flex-wrap justify-center gap-4">
             {question.options.map((note) => {
               const isSelected = selectedNotes.includes(note);
               let btnVariant: any = isSelected ? 'default' : 'outline';
               
               if (showResult) {
                 const isAnswer = question.answer.includes(note);
-                if (isAnswer && isSelected) btnVariant = 'default'; // Correctly selected
-                else if (isAnswer && !isSelected) btnVariant = 'secondary'; // Missed correct answer
-                else if (!isAnswer && isSelected) btnVariant = 'destructive'; // Wrongly selected
+                if (isAnswer && isSelected) btnVariant = 'default';
+                else if (isAnswer && !isSelected) btnVariant = 'secondary';
+                else if (!isAnswer && isSelected) btnVariant = 'destructive';
                 else btnVariant = 'outline';
               }
 
@@ -152,7 +179,7 @@ export function Quiz({ isChallenge, difficulty, onHome }: QuizProps) {
                 <Button
                   key={note}
                   variant={btnVariant}
-                  className={`w-16 h-16 text-lg font-bold transition-all ${isSelected && !showResult ? 'ring-2 ring-blue-400 ring-offset-2' : ''}`}
+                  className={`w-16 h-16 text-xl font-display transition-all ${isSelected && !showResult ? 'ring-4 ring-indigo-200 ring-offset-2 scale-105' : ''}`}
                   onClick={() => toggleNote(note)}
                   disabled={showResult}
                 >
@@ -168,7 +195,10 @@ export function Quiz({ isChallenge, difficulty, onHome }: QuizProps) {
                 ✅ 提交答案
               </Button>
               <Button size="lg" variant="outline" onClick={onHome}>
-                🏠 回首頁
+                🏠 回設定頁
+              </Button>
+              <Button size="lg" variant="ghost" onClick={onPlatformHome}>
+                🔙 回主頁
               </Button>
             </div>
           ) : (
@@ -188,7 +218,10 @@ export function Quiz({ isChallenge, difficulty, onHome }: QuizProps) {
                   🎯 下一題
                 </Button>
                 <Button size="lg" variant="outline" onClick={onHome}>
-                  🏠 回首頁
+                  🏠 回設定頁
+                </Button>
+                <Button size="lg" variant="ghost" onClick={onPlatformHome}>
+                  🔙 回主頁
                 </Button>
               </div>
             </div>

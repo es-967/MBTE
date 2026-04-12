@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { TUTORIAL_CONTENT } from '../../lib/music/data';
-import { useGameStore } from '../../store/useGameStore';
+import { useGameStore, defaultProgress } from '../../store/useGameStore';
 
 export function Tutorial() {
-  const { level } = useGameStore();
+  const { progress } = useGameStore();
+  const moduleProgress = progress['scale-practice'] || defaultProgress;
+  const { level } = moduleProgress;
   const [expanded, setExpanded] = useState<string | null>(null);
 
   const toggle = (key: string) => {

@@ -4,32 +4,31 @@
  */
 
 import React, { useState } from 'react';
-import { Home } from './components/game/Home';
-import { Quiz } from './components/game/Quiz';
+import { PlatformHome } from './components/platform/PlatformHome';
+import { TRAINING_MODULES } from './modules/index';
+import { TrainingModule } from './types/TrainingModule';
 
 export default function App() {
-  const [page, setPage] = useState<'home' | 'quiz'>('home');
-  const [isChallenge, setIsChallenge] = useState(false);
-  const [difficulty, setDifficulty] = useState<'easy' | 'normal' | 'hard'>('normal');
+  const [activeModule, setActiveModule] = useState<TrainingModule | null>(null);
 
-  const handleStartQuiz = (challenge: boolean, diff: 'easy' | 'normal' | 'hard' = 'normal') => {
-    setIsChallenge(challenge);
-    setDifficulty(diff);
-    setPage('quiz');
-  };
-
-  const handleHome = () => {
-    setPage('home');
-  };
+  if (activeModule) {
+    const ModuleComponent = activeModule.component;
+    return (
+      <div className="min-h-screen bg-gray-50 text-gray-900 font-sans">
+        <main className="container mx-auto py-8">
+          <ModuleComponent onHome={() => setActiveModule(null)} />
+        </main>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-900 font-sans selection:bg-blue-200">
+    <div className="min-h-screen bg-gray-50 text-gray-900 font-sans">
       <main className="container mx-auto py-8">
-        {page === 'home' ? (
-          <Home onStartQuiz={handleStartQuiz} />
-        ) : (
-          <Quiz isChallenge={isChallenge} difficulty={difficulty} onHome={handleHome} />
-        )}
+        <PlatformHome
+          modules={TRAINING_MODULES}
+          onSelectModule={setActiveModule}
+        />
       </main>
     </div>
   );

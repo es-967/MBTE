@@ -2,44 +2,44 @@ import React, { useState, useEffect } from 'react';
 import { useGameStore, defaultProgress } from '../../store/useGameStore';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
-import { IntervalTutorial } from './IntervalTutorial';
 import { ModuleStats } from '../../components/platform/ModuleStats';
-import { IntervalQuizMode } from './intervalQuiz.types';
+import { StepQuizMode } from './stepQuiz.types';
 
-interface IntervalHomeProps {
-  onStartQuiz: (isChallenge: boolean, targetLevel: number, mode: IntervalQuizMode) => void;
+interface Props {
+  onStartQuiz: (isChallenge: boolean, targetLevel: number, mode: StepQuizMode) => void;
   onHome: () => void;
 }
 
-export function IntervalHome({ onStartQuiz, onHome }: IntervalHomeProps) {
+export function StepHome({ onStartQuiz, onHome }: Props) {
   const { progress } = useGameStore();
-  const moduleProgress = progress['interval-practice'] || defaultProgress;
+  const moduleProgress = progress['step-practice'] || defaultProgress;
   const { level } = moduleProgress;
-  
+
   const [practiceLevel, setPracticeLevel] = useState<number>(level);
   const [challengeLevel, setChallengeLevel] = useState<number>(level);
-  const [practiceMode, setPracticeMode] = useState<IntervalQuizMode>('note-interval');
+  const [practiceMode, setPracticeMode] = useState<StepQuizMode>('semitones');
 
-  // Keep dropdowns synced if they were at the max level
   useEffect(() => {
     setPracticeLevel(prev => prev === level - 1 ? level : prev);
     setChallengeLevel(prev => prev === level - 1 ? level : prev);
   }, [level]);
 
   const unlockInfo = [
-    { label: 'C根音 (1~8度)', level: 1 },
-    { label: '自然音根音 (1~3度)', level: 3 },
-    { label: '4~5度與增減音程', level: 5 },
-    { label: '升降記號根音', level: 7 },
-    { label: '6~8度', level: 9 },
-    { label: '重升降記號 (Max)', level: 11 },
+    { label: '二度音程（無升降記號）', level: 1 },
+    { label: '二至三度音程（單方升降記號）', level: 2 },
+    { label: '擴大至四度（雙方升降記號）', level: 3 },
+    { label: '擴大至六度音程', level: 4 },
+    { label: '擴大至七度音程 (Max)', level: 5 },
   ];
 
   const levelOptions = Array.from({ length: level }, (_, i) => i + 1);
 
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-8 animate-in fade-in duration-500">
-      <button onClick={onHome} className="flex items-center gap-1 text-sm font-semibold text-slate-500 hover:text-slate-800 mb-4 transition-colors">
+      <button 
+        onClick={onHome}
+        className="flex items-center gap-1 text-sm font-semibold text-slate-500 hover:text-slate-800 mb-4 transition-colors"
+      >
         ← 返回主頁
       </button>
 
@@ -70,10 +70,11 @@ export function IntervalHome({ onStartQuiz, onHome }: IntervalHomeProps) {
               <select
                 className="w-full p-3 border-2 border-slate-200 rounded-xl bg-white text-slate-900 focus:border-indigo-500 focus:ring-indigo-500 transition-colors"
                 value={practiceMode}
-                onChange={(e) => setPracticeMode(e.target.value as IntervalQuizMode)}
+                onChange={(e) => setPracticeMode(e.target.value as StepQuizMode)}
               >
-                <option value="note-interval">音名推算音程 (預設)</option>
-                <option value="interval-name">音程定義記憶 (全音半音)</option>
+                <option value="semitones">全音與半音判斷</option>
+                {level >= 2 && <option value="note-steps">音程結構推算 (音名距離)</option>}
+                {level >= 2 && <option value="mixed">綜合練習 (隨機混合)</option>}
               </select>
             </div>
             <Button className="w-full text-lg" size="lg" onClick={() => onStartQuiz(false, practiceLevel, practiceMode)}>
@@ -102,7 +103,7 @@ export function IntervalHome({ onStartQuiz, onHome }: IntervalHomeProps) {
                 ))}
               </select>
             </div>
-            <Button variant="secondary" className="w-full text-lg" size="lg" onClick={() => onStartQuiz(true, challengeLevel, 'note-interval')}>
+            <Button variant="secondary" className="w-full text-lg" size="lg" onClick={() => onStartQuiz(true, challengeLevel, 'mixed')}>
               🚀 開始挑戰
             </Button>
           </CardContent>
@@ -126,8 +127,6 @@ export function IntervalHome({ onStartQuiz, onHome }: IntervalHomeProps) {
           ))}
         </div>
       </div>
-
-      <IntervalTutorial />
     </div>
   );
 }

@@ -102,14 +102,14 @@ export const useGameStore = create<GameState>()(
   )
 );
 
-export function getGlobalProgress(progress: Record<string, ModuleProgress>, totalModules: number = 3) {
+export function getGlobalProgress(progress: Record<string, ModuleProgress>, totalModules: number = 4) {
   let totalExp = 0;
   let totalStreak = 0;
   let totalBestScore = 0;
   const MAX_LEVEL = 11;
   let totalCompletion = 0;
   
-  const moduleIds = ['scale-practice', 'interval-practice', 'triad-practice'];
+  const moduleIds = ['scale-practice', 'step-practice', 'interval-practice', 'triad-practice'];
   
   moduleIds.forEach(id => {
     const p = progress[id] || defaultProgress;

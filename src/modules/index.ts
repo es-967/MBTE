@@ -2,6 +2,7 @@ import { TrainingModule } from '../types/TrainingModule';
 import { ScaleModule } from './ScaleModule';
 import { TriadModule } from './TriadModule';
 import { IntervalModule } from './IntervalModule';
+import { StepModule } from './StepModule';
 
 export const TRAINING_MODULES: TrainingModule[] = [
   {
@@ -13,6 +14,16 @@ export const TRAINING_MODULES: TrainingModule[] = [
     difficulty: 'beginner',
     estimatedMinutes: 5,
     component: ScaleModule,
+  },
+  {
+    id: 'step-practice',
+    title: '全音半音練習',
+    description: '挑戰各個音名之間是全音或是半音，隨難度增加升降記號與距離',
+    icon: '🎹',
+    unlockLevel: 0,
+    difficulty: 'beginner',
+    estimatedMinutes: 5,
+    component: StepModule,
   },
   {
     id: 'interval-practice',
@@ -28,7 +39,7 @@ export const TRAINING_MODULES: TrainingModule[] = [
     id: 'triad-practice',
     title: '三和弦練習',
     description: '練習辨識大三、小三、增三、減三和弦，提升和弦聽覺與視覺辨識能力',
-    icon: '🎹',
+    icon: '🎸',
     unlockLevel: 0,
     difficulty: 'intermediate',
     estimatedMinutes: 5,

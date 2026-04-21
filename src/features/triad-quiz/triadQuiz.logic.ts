@@ -25,7 +25,7 @@ function buildInterval(rootName: string, targetSemi: number, letterSteps: number
   const baseSemi = LETTER_BASE[targetLetter]
   const diff = ((targetSemi - baseSemi) % 12 + 12) % 12
   const acc = diff <= 2 ? diff : diff - 12 // clamp to -2..+2
-  const accStr = acc === 2 ? '##' : acc === 1 ? '#' : acc === -1 ? 'b' : acc === -2 ? 'bb' : ''
+  const accStr = acc === 2 ? '𝄪' : acc === 1 ? '#' : acc === -1 ? 'b' : acc === -2 ? 'bb' : ''
   return targetLetter + accStr
 }
 

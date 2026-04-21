@@ -109,7 +109,7 @@ export function getGlobalProgress(progress: Record<string, ModuleProgress>, tota
   const MAX_LEVEL = 11;
   let totalCompletion = 0;
   
-  const moduleIds = ['scale-practice', 'step-practice', 'interval-practice', 'triad-practice'];
+  const moduleIds = ['scale-practice', 'step-practice', 'interval-practice', 'triad-practice', 'seventh-practice'];
   
   moduleIds.forEach(id => {
     const p = progress[id] || defaultProgress;

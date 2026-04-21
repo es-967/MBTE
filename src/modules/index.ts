@@ -3,6 +3,7 @@ import { ScaleModule } from './ScaleModule';
 import { TriadModule } from './TriadModule';
 import { IntervalModule } from './IntervalModule';
 import { StepModule } from './StepModule';
+import { SeventhModule } from './SeventhModule';
 
 export const TRAINING_MODULES: TrainingModule[] = [
   {
@@ -44,5 +45,15 @@ export const TRAINING_MODULES: TrainingModule[] = [
     difficulty: 'intermediate',
     estimatedMinutes: 5,
     component: TriadModule,
+  },
+  {
+    id: 'seventh-practice',
+    title: '七和弦練習',
+    description: '練習辨識大七、屬七、小七、半減七、減七等進階和弦組成',
+    icon: '🎷',
+    unlockLevel: 0,
+    difficulty: 'advanced',
+    estimatedMinutes: 7,
+    component: SeventhModule,
   },
 ];

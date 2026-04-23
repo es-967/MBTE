@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, CircleDashed, ListOrdered } from 'lucide-react';
+import { X, CircleDashed, ListOrdered, Guitar } from 'lucide-react';
 import { SemitoneWheel } from '../../features/semitone-quiz/SemitoneWheel';
 import { DegreeTool } from '../../features/degree-tool/DegreeTool';
+import { FretboardTool } from '../../features/fretboard-tool/FretboardTool';
 
 interface ToolModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-type Tab = 'wheel' | 'degree';
+type Tab = 'wheel' | 'degree' | 'fretboard';
 
 export function ToolModal({ isOpen, onClose }: ToolModalProps) {
   const [activeTab, setActiveTab] = useState<Tab>('wheel');
@@ -57,6 +58,17 @@ export function ToolModal({ isOpen, onClose }: ToolModalProps) {
                     <ListOrdered size={16} />
                     級數對照
                   </button>
+                  <button
+                    onClick={() => setActiveTab('fretboard')}
+                    className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-all ${
+                      activeTab === 'fretboard' 
+                        ? 'bg-white text-indigo-600 shadow-sm' 
+                        : 'text-slate-500 hover:text-slate-700'
+                    }`}
+                  >
+                    <Guitar size={16} />
+                    吉他指板
+                  </button>
                 </div>
                 
                 <button
@@ -81,7 +93,7 @@ export function ToolModal({ isOpen, onClose }: ToolModalProps) {
                         <SemitoneWheel />
                       </div>
                     </motion.div>
-                  ) : (
+                  ) : activeTab === 'degree' ? (
                     <motion.div
                       key="degree"
                       initial={{ opacity: 0, x: 20 }}
@@ -89,6 +101,15 @@ export function ToolModal({ isOpen, onClose }: ToolModalProps) {
                       exit={{ opacity: 0, x: -20 }}
                     >
                       <DegreeTool />
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="fretboard"
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -20 }}
+                    >
+                      <FretboardTool />
                     </motion.div>
                   )}
                 </AnimatePresence>

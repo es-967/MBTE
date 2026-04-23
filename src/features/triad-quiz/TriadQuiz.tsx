@@ -96,6 +96,26 @@ export function TriadQuiz({ isChallenge, targetLevel, onHome, onPlatformHome }: 
   const correctRoot = question.answer.root
   const correctTypeKey = question.answer.chordType.key
 
+  const getChordSymbol = (key: ChordKey) => {
+    const map: Record<string, string> = {
+      'Maj': 'maj',
+      'Min': 'm',
+      'Aug': 'aug',
+      'Dim': 'dim'
+    };
+    return map[key] || key;
+  };
+
+  const getChordDisplay = (key: ChordKey, name: string) => {
+    return `${getChordSymbol(key)} (${name})`;
+  };
+
+  const getIntervalName = (semis: number) => {
+    if (semis === 4) return '大三度';
+    if (semis === 3) return '小三度';
+    return `${semis}半音`;
+  };
+
   const rootBtnClass = (r: string) => {
     const base = 'px-3 py-2.5 rounded-lg border text-sm font-medium transition-colors'
     if (!submitted) {
@@ -199,7 +219,7 @@ export function TriadQuiz({ isChallenge, targetLevel, onHome, onPlatformHome }: 
               onClick={() => selectType(t.key as ChordKey)}
               disabled={submitted}
             >
-              {t.name}
+              {getChordSymbol(t.key as ChordKey)}
             </button>
           ))}
         </div>
@@ -213,13 +233,15 @@ export function TriadQuiz({ isChallenge, targetLevel, onHome, onPlatformHome }: 
           </p>
           <p className="font-medium opacity-90">
             {isCorrect 
-              ? `${correctRoot}${question.answer.chordType.name}`
-              : `正確答案：${correctRoot}${question.answer.chordType.name}（${question.answer.notes.join(' ')}）`
+              ? `${correctRoot} ${getChordDisplay(question.answer.chordType.key as ChordKey, question.answer.chordType.name)}`
+              : `正確答案：${correctRoot} ${getChordDisplay(question.answer.chordType.key as ChordKey, question.answer.chordType.name)}（${question.answer.notes.join(' ')}）`
             }
           </p>
           {!isCorrect && (
-            <p className="text-sm mt-2 opacity-75">
-              結構：{question.answer.notes[0]}→{question.answer.notes[1]}（{question.answer.chordType.steps[0]}半音）+ {question.answer.notes[1]}→{question.answer.notes[2]}（{question.answer.chordType.steps[1]}半音）= {question.answer.chordType.name}
+            <p className="text-xs mt-2 opacity-75 font-medium leading-relaxed">
+              結構：{question.answer.notes[0]}→{question.answer.notes[1]}（{getIntervalName(question.answer.chordType.steps[0])}）
+              + {question.answer.notes[1]}→{question.answer.notes[2]}（{getIntervalName(question.answer.chordType.steps[1])}）
+              = {question.answer.chordType.name}
             </p>
           )}
         </div>

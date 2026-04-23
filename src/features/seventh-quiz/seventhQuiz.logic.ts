@@ -10,7 +10,7 @@ export const SEVENTH_CHORD_TYPES: SeventhChordType[] = [
   { key: '7', name: '屬七和弦', steps: [4, 7, 10] },
   { key: 'Min7', name: '小七和弦', steps: [3, 7, 10] },
   { key: 'm7b5', name: '半減七和弦', steps: [3, 6, 10] },
-  { key: 'Maj7#5', name: '增大七和弦', steps: [4, 8, 11] },
+  { key: 'Maj7#5', name: '大七升五和弦', steps: [4, 8, 11] },
   { key: 'mMaj7', name: '小大七和弦', steps: [3, 7, 11] },
   { key: 'Dim7', name: '減七和弦', steps: [3, 6, 9] },
   { key: 'Aug7', name: '增屬七和弦', steps: [4, 8, 10] },
@@ -90,7 +90,7 @@ export function generateSeventhQuestion(level: number): SeventhQuizQuestion {
     // Level 6-8: All 12 roots, first 6 types
     rootSemi = Math.floor(Math.random() * 12);
     chordType = SEVENTH_CHORD_TYPES[Math.floor(Math.random() * 6)];
-    shuffleNotes = true;
+    shuffleNotes = false;
   } else {
     // Level 9+: All 12 roots, all 8 types, shuffled
     rootSemi = Math.floor(Math.random() * 12);

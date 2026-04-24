@@ -16,7 +16,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900 font-sans relative">
-      <main className="container mx-auto py-8">
+      <main className="container mx-auto py-4 sm:py-8 px-4 sm:px-0">
         {activeModule ? (
           <activeModule.component onHome={() => setActiveModule(null)} />
         ) : (

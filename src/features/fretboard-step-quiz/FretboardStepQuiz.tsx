@@ -199,8 +199,8 @@ export function FretboardStepQuiz({ isChallenge, targetLevel, onHome, onPlatform
 
   const fretboardRenderer = useMemo(() => {
     return (
-      <div className="relative w-full overflow-x-auto select-none rounded-xl bg-slate-800 p-2 sm:p-4 border-4 border-slate-900 shadow-xl my-6">
-        <div className="min-w-[500px] flex text-white relative">
+      <div className="relative w-full overflow-x-auto select-none rounded-xl bg-slate-800 p-1.5 sm:p-4 border-2 sm:border-4 border-slate-900 shadow-xl my-4 sm:my-6">
+        <div className="min-w-[450px] sm:min-w-[500px] flex text-white relative">
           <div className="absolute top-0 left-8 flex w-[calc(100%-2rem)] h-6 z-10">
             {Array.from({ length: 13 }).map((_, f) => (
               <div key={f} className="flex-1 flex justify-center text-[10px] text-slate-400 font-bold opacity-50">
@@ -208,17 +208,16 @@ export function FretboardStepQuiz({ isChallenge, targetLevel, onHome, onPlatform
               </div>
             ))}
           </div>
-          <div className="flex flex-col mt-6 w-full gap-0 py-2 relative">
-            {/* Absolute Fret Lines */}
-            <div className="absolute inset-y-2 right-0 left-8 flex pointer-events-none z-10">
+          <div className="flex flex-col mt-6 w-full gap-0 py-1 sm:py-2 relative">
+            <div className="absolute inset-y-1 sm:inset-y-2 right-0 left-8 flex pointer-events-none z-10">
               {Array.from({ length: 13 }).map((_, f) => (
-                <div key={f} className={`flex-1 ${f === 0 ? 'border-r-4 border-r-slate-300' : 'border-r-2 border-r-slate-500'}`} />
+                <div key={f} className={`flex-1 ${f === 0 ? 'border-r-2 sm:border-r-4 border-r-slate-300' : 'border-r sm:border-r-2 border-r-slate-500'}`} />
               ))}
             </div>
 
             {STRINGS.map((pitch, sIdx) => (
               <div key={sIdx} className="flex items-center group relative h-6 sm:h-8">
-                <div className="w-8 text-xs font-bold text-slate-400 text-center font-mono relative z-20">
+                <div className="w-8 text-[10px] sm:text-xs font-bold text-slate-400 text-center font-mono relative z-20">
                   {STRING_NAMES[sIdx]}
                 </div>
                 <div className="absolute right-0 w-[calc(100%-2rem)] h-[2px] bg-gradient-to-r from-slate-600 via-slate-400 to-slate-500 shadow-sm top-1/2 -translate-y-1/2 pointer-events-none z-10" 
@@ -231,20 +230,20 @@ export function FretboardStepQuiz({ isChallenge, targetLevel, onHome, onPlatform
                     const isActive = isP1 || isP2;
                     let dotClass = '';
                     if (isActive) {
-                        dotClass = 'bg-amber-400 text-amber-900 ring-4 ring-white shadow-[0_0_15px_rgba(251,191,36,0.6)] scale-110';
+                        dotClass = 'bg-amber-400 text-amber-900 ring-2 sm:ring-4 ring-white shadow-[0_0_15px_rgba(251,191,36,0.6)] scale-110';
                     }
 
                     return (
                       <div key={f} className={`flex-1 flex justify-center items-center h-full relative ${f === 0 ? 'bg-slate-900/40' : ''}`}>
                         {[3, 5, 7, 9, 12].includes(f) && sIdx === 2 && (
-                          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-slate-600/50 pointer-events-none -z-10" />
+                          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 sm:w-3 h-2 sm:h-3 rounded-full bg-slate-600/50 pointer-events-none -z-10" />
                         )}
                         {f === 12 && sIdx === 2 && (
-                          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[150%] w-3 h-3 rounded-full bg-slate-600/50 pointer-events-none -z-10" />
+                          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[150%] w-2 sm:w-3 h-2 sm:h-3 rounded-full bg-slate-600/50 pointer-events-none -z-10" />
                         )}
                         
                         {isActive && (
-                          <div className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center font-bold z-30 ${dotClass}`}>
+                          <div className={`w-4 h-4 sm:w-6 sm:h-6 rounded-full flex items-center justify-center font-bold z-30 transition-all ${dotClass}`}>
                           </div>
                         )}
                       </div>
@@ -263,11 +262,11 @@ export function FretboardStepQuiz({ isChallenge, targetLevel, onHome, onPlatform
   if (gameOver) {
     return (
       <div className="max-w-2xl mx-auto p-6 text-center space-y-8 animate-in zoom-in duration-500">
-        <h1 className="text-5xl font-black text-slate-900">⏰ 時間到！</h1>
+        <h1 className="text-4xl sm:text-5xl font-black text-slate-900">⏰ 時間到！</h1>
         <div className="space-y-2">
-          <p className="text-2xl font-bold text-indigo-600">🎯 你的得分：{score}</p>
+          <p className="text-xl sm:text-2xl font-bold text-indigo-600">🎯 你的得分：{score}</p>
         </div>
-        <div className="flex justify-center gap-4">
+        <div className="flex flex-col sm:flex-row justify-center gap-4 px-8">
           <Button size="lg" onClick={() => {
             setScore(0);
             setCombo(0);
@@ -275,10 +274,10 @@ export function FretboardStepQuiz({ isChallenge, targetLevel, onHome, onPlatform
             setTimeLeft(60);
             setGameOver(false);
             loadNewQuestion();
-          }} className="w-48">
+          }} className="w-full sm:w-48 h-12 sm:h-14">
             <PlayCircle className="w-5 h-5 mr-2" /> 再玩一次
           </Button>
-          <Button size="lg" variant="outline" onClick={onHome} className="w-48">
+          <Button size="lg" variant="outline" onClick={onHome} className="w-full sm:w-48 h-12 sm:h-14">
             返回選單
           </Button>
         </div>
@@ -287,22 +286,22 @@ export function FretboardStepQuiz({ isChallenge, targetLevel, onHome, onPlatform
   }
 
   return (
-    <div className="max-w-2xl mx-auto p-6 space-y-6 animate-in fade-in duration-500">
-      <div className="flex items-center justify-between text-sm font-medium text-slate-500">
-        <div className="flex items-center gap-3">
-          <button onClick={onHome} className="flex items-center gap-1 text-sm font-semibold text-slate-500 hover:text-slate-800 transition-colors">
+    <div className="max-w-2xl mx-auto p-4 sm:p-6 space-y-4 sm:space-y-6 animate-in fade-in duration-500">
+      <div className="flex items-center justify-between text-xs sm:text-sm font-medium text-slate-500 px-2">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <button onClick={onHome} className="flex items-center gap-1 font-semibold text-slate-500 hover:text-slate-800 transition-colors">
             ← 放棄
           </button>
-          <span className="text-indigo-600 font-bold">Lv{currentDifficulty}</span>
+          <span className="text-indigo-600 font-bold bg-indigo-50 px-2 py-0.5 rounded">Lv{currentDifficulty}</span>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 sm:gap-4">
           {isChallenge && (
-            <span className={`font-display font-bold text-lg px-3 py-1 rounded-full ${timeLeft <= 10 ? 'bg-rose-100 text-rose-600 animate-pulse' : 'bg-indigo-50 text-indigo-600'}`}>
+            <span className={`font-display font-bold text-base sm:text-lg px-2 sm:px-3 py-1 rounded-full ${timeLeft <= 10 ? 'bg-rose-100 text-rose-600 animate-pulse' : 'bg-indigo-50 text-indigo-600'}`}>
               ⏱ {timeLeft}s
             </span>
           )}
           
-          <span className={`${isChallenge ? 'bg-indigo-50 text-indigo-700' : 'bg-emerald-50 text-emerald-700'} px-3 py-1 rounded-full`}>
+          <span className={`${isChallenge ? 'bg-indigo-50 text-indigo-700' : 'bg-emerald-50 text-emerald-700'} px-2 sm:px-3 py-1 rounded-full`}>
             得分 {score}
           </span>
           
@@ -322,19 +321,19 @@ export function FretboardStepQuiz({ isChallenge, targetLevel, onHome, onPlatform
         </div>
       </div>
 
-      <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm relative overflow-hidden">
-        <div className="text-center space-y-2 mb-4">
-          <h2 className="text-2xl font-black text-slate-800">這是全音還是半音？</h2>
-          <p className="text-slate-500 font-medium">觀察指板上兩個亮點的距離</p>
+      <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 border border-slate-200 shadow-sm relative overflow-hidden">
+        <div className="text-center space-y-1 sm:space-y-2 mb-2 sm:mb-4">
+          <h2 className="text-xl sm:text-2xl font-black text-slate-800">這是全音還是半音？</h2>
+          <p className="text-xs sm:text-base text-slate-500 font-medium">觀察指板上兩個亮點的距離</p>
         </div>
 
         {fretboardRenderer}
 
-        <div className="grid grid-cols-2 gap-4 mt-8 max-w-md mx-auto">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 mt-6 sm:mt-8 max-w-sm sm:max-w-md mx-auto px-2">
           <Button 
             size="lg" 
             variant="outline"
-            className={`text-xl py-8 font-bold border-2 ${feedback === 'wrong' && lastSelected === true ? 'bg-rose-50 border-rose-400 text-rose-700' : 'hover:bg-indigo-50 hover:border-indigo-300 hover:text-indigo-700'}`}
+            className={`text-lg sm:text-xl py-6 sm:py-8 font-bold border-2 ${feedback === 'wrong' && lastSelected === true ? 'bg-rose-50 border-rose-400 text-rose-700' : 'hover:bg-indigo-50 hover:border-indigo-300 hover:text-indigo-700'}`}
             onClick={() => handleAnswer(true)}
             disabled={feedback === 'correct'}
           >
@@ -343,7 +342,7 @@ export function FretboardStepQuiz({ isChallenge, targetLevel, onHome, onPlatform
           <Button 
             size="lg" 
             variant="outline"
-            className={`text-xl py-8 font-bold border-2 ${feedback === 'wrong' && lastSelected === false ? 'bg-rose-50 border-rose-400 text-rose-700' : 'hover:bg-indigo-50 hover:border-indigo-300 hover:text-indigo-700'}`}
+            className={`text-lg sm:text-xl py-6 sm:py-8 font-bold border-2 ${feedback === 'wrong' && lastSelected === false ? 'bg-rose-50 border-rose-400 text-rose-700' : 'hover:bg-indigo-50 hover:border-indigo-300 hover:text-indigo-700'}`}
             onClick={() => handleAnswer(false)}
             disabled={feedback === 'correct'}
           >
@@ -352,14 +351,14 @@ export function FretboardStepQuiz({ isChallenge, targetLevel, onHome, onPlatform
         </div>
         
         {feedback !== 'none' && (
-          <div className="mt-8 text-center animate-in slide-in-from-bottom-2 h-8">
+          <div className="mt-6 sm:mt-8 text-center animate-in slide-in-from-bottom-2 h-6 sm:h-8">
             {feedback === 'correct' ? (
-              <span className="text-emerald-500 font-bold text-lg flex items-center justify-center gap-2">
-                <span className="text-2xl">✨</span> 答對了！
+              <span className="text-emerald-500 font-bold text-base sm:text-lg flex items-center justify-center gap-2">
+                <span className="text-xl sm:text-2xl">✨</span> 答對了！
               </span>
             ) : (
-              <span className="text-rose-500 font-bold text-lg flex items-center justify-center gap-2">
-                <span className="text-2xl">💡</span> 不太對喔，再觀察一下！
+              <span className="text-rose-500 font-bold text-base sm:text-lg flex items-center justify-center gap-2">
+                <span className="text-xl sm:text-2xl">💡</span> 不太對喔，再觀察一下！
               </span>
             )}
           </div>

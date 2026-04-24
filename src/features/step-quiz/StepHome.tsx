@@ -35,17 +35,17 @@ export function StepHome({ onStartQuiz, onHome }: Props) {
   const levelOptions = Array.from({ length: level }, (_, i) => i + 1);
 
   return (
-    <div className="max-w-4xl mx-auto p-6 space-y-8 animate-in fade-in duration-500">
+    <div className="max-w-4xl mx-auto p-4 sm:p-6 space-y-6 sm:space-y-8 animate-in fade-in duration-500">
       <button 
         onClick={onHome}
-        className="flex items-center gap-1 text-sm font-semibold text-slate-500 hover:text-slate-800 mb-4 transition-colors"
+        className="flex items-center gap-1 text-sm font-semibold text-slate-500 hover:text-slate-800 mb-2 sm:mb-4 transition-colors"
       >
         ← 返回主頁
       </button>
 
       <ModuleStats progress={moduleProgress} />
 
-      <div className="grid md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
         <Card>
           <CardHeader>
             <CardTitle className="text-2xl font-display flex items-center gap-2 text-slate-800">

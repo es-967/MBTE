@@ -144,61 +144,67 @@ export function SemitoneWheel() {
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto p-6 bg-slate-900 rounded-3xl shadow-2xl border border-slate-800 text-slate-100 font-sans">
-      <div className="text-center mb-8">
-        <h2 className="text-2xl font-bold text-white mb-2 tracking-wide">全半音互動參考工具</h2>
-        <p className="text-slate-400 text-sm">探索音符之間的距離與大調音階的奧秘</p>
+    <div className="w-full max-w-4xl mx-auto p-4 sm:p-6 bg-slate-900 rounded-3xl shadow-2xl border border-slate-800 text-slate-100 font-sans">
+      <div className="text-center mb-6 sm:mb-8">
+        <h2 className="text-xl sm:text-2xl font-bold text-white mb-1 sm:mb-2 tracking-wide">全半音互動參考工具</h2>
+        <p className="text-slate-400 text-xs sm:text-sm px-2">探索音符之間的距離與大調音階的奧秘</p>
       </div>
 
-      <div className="flex justify-center gap-4 mb-8">
+      <div className="flex justify-center gap-2 sm:gap-4 mb-6 sm:mb-8">
         <Button 
           variant={viewMode === 'band' ? 'default' : 'outline'}
-          className={viewMode === 'band' ? 'bg-gold-500 hover:bg-gold-600 text-slate-900 border-gold-500' : 'border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white'}
+          size="sm"
+          className={`sm:h-10 sm:px-4 ${viewMode === 'band' ? 'bg-gold-500 hover:bg-gold-600 text-slate-900 border-gold-500' : 'border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white'}`}
           onClick={() => setViewMode('band')}
         >
-          <LayoutList size={18} className="mr-2" /> 橫向音帶
+          <LayoutList size={16} className="mr-1 sm:mr-2" /> 橫向音帶
         </Button>
         <Button 
           variant={viewMode === 'wheel' ? 'default' : 'outline'}
-          className={viewMode === 'wheel' ? 'bg-gold-500 hover:bg-gold-600 text-slate-900 border-gold-500' : 'border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white'}
+          size="sm"
+          className={`sm:h-10 sm:px-4 ${viewMode === 'wheel' ? 'bg-gold-500 hover:bg-gold-600 text-slate-900 border-gold-500' : 'border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white'}`}
           onClick={() => setViewMode('wheel')}
         >
-          <Disc size={18} className="mr-2" /> 轉成圓盤
+          <Disc size={16} className="mr-1 sm:mr-2" /> 轉成圓盤
         </Button>
       </div>
 
       <div className="mb-6">
-        <div className="flex flex-wrap justify-center gap-1.5 mb-4 items-center">
-          {NOTES.map(note => (
-            <button 
-              key={note.index}
-              className={`w-10 h-10 rounded-lg font-bold text-sm transition-all border
-                ${rootMod === note.index 
-                  ? 'bg-gold-500 text-slate-900 border-gold-400 shadow-[0_0_15px_rgba(201,185,122,0.4)] scale-110 z-10' 
-                  : 'bg-slate-800 text-slate-300 border-slate-700 hover:bg-slate-700'}
-              `}
-              onClick={() => navigateToNote(note.index)}
+        <div className="flex flex-wrap justify-center gap-1 sm:gap-1.5 mb-4 items-center">
+          <div className="grid grid-cols-6 sm:flex sm:flex-wrap justify-center gap-1 sm:gap-1.5 w-full sm:w-auto">
+            {NOTES.map(note => (
+              <button 
+                key={note.index}
+                className={`aspect-square w-full sm:w-10 sm:h-10 rounded-lg font-bold text-xs sm:text-sm transition-all border flex items-center justify-center
+                  ${rootMod === note.index 
+                    ? 'bg-gold-500 text-slate-900 border-gold-400 shadow-[0_0_15px_rgba(201,185,122,0.4)] scale-105 z-10' 
+                    : 'bg-slate-800 text-slate-300 border-slate-700 hover:bg-slate-700'}
+                `}
+                onClick={() => navigateToNote(note.index)}
+              >
+                {note.natural || (accidentalMode === 'sharp' ? note.sharp : note.flat)}
+              </button>
+            ))}
+          </div>
+          <div className="w-full flex justify-center mt-2 sm:mt-0 sm:w-auto">
+            <div className="w-px h-6 bg-slate-700 mx-3 hidden sm:block"></div>
+            <Button 
+              variant="outline" 
+              size="sm"
+              className="border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white text-xs h-8 sm:h-9"
+              onClick={() => setAccidentalMode(prev => prev === 'sharp' ? 'flat' : 'sharp')}
             >
-              {note.natural || (accidentalMode === 'sharp' ? note.sharp : note.flat)}
-            </button>
-          ))}
-          <div className="w-px h-8 bg-slate-700 mx-2 hidden sm:block"></div>
-          <Button 
-            variant="outline" 
-            size="sm"
-            className="border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white"
-            onClick={() => setAccidentalMode(prev => prev === 'sharp' ? 'flat' : 'sharp')}
-          >
-            切換 {accidentalMode === 'sharp' ? '降記號 (b)' : '升記號 (#)'}
-          </Button>
+              切換 {accidentalMode === 'sharp' ? 'b' : '#'}
+            </Button>
+          </div>
         </div>
 
-        <div className="flex flex-wrap justify-center items-center gap-2">
-          <span className="text-slate-500 text-xs mr-2">吉他空弦快速鍵:</span>
+        <div className="flex flex-wrap justify-center items-center gap-1.5 sm:gap-2">
+          <span className="text-slate-500 text-[10px] sm:text-xs mr-1">吉他空弦快速鍵:</span>
           {GUITAR_STRINGS.map((str, idx) => (
             <button 
               key={`${str.name}-${idx}`}
-              className="px-3 py-1.5 rounded-md bg-slate-800 border border-slate-700 text-slate-300 text-xs hover:bg-slate-700 hover:text-white transition-colors"
+              className="px-2 py-1 rounded-md bg-slate-800 border border-slate-700 text-slate-300 text-[10px] sm:text-xs hover:bg-slate-700 hover:text-white transition-colors"
               onClick={() => navigateToNote(str.noteIndex, `這是吉他第 ${str.stringNum} 弦空弦音`)}
             >
               {str.name}
@@ -207,7 +213,7 @@ export function SemitoneWheel() {
         </div>
       </div>
 
-      <div className="relative min-h-[300px] flex flex-col items-center justify-center overflow-hidden">
+      <div className="relative min-h-[260px] sm:min-h-[300px] flex flex-col items-center justify-center overflow-hidden">
         {viewMode === 'band' && (
           <motion.div 
             initial={{ opacity: 0, scale: 0.9 }}
@@ -216,7 +222,7 @@ export function SemitoneWheel() {
             transition={{ duration: 0.5, ease: "easeInOut" }}
             className="w-full"
           >
-            <div className="relative w-full h-32 overflow-hidden flex justify-center items-center bg-slate-800/50 rounded-xl border border-slate-700 shadow-inner">
+            <div className="relative w-full h-24 sm:h-32 overflow-hidden flex justify-center items-center bg-slate-800/50 rounded-xl border border-slate-700 shadow-inner">
               <motion.div 
                 className="flex absolute cursor-grab active:cursor-grabbing"
                 style={{ x: dragX }}
@@ -241,21 +247,21 @@ export function SemitoneWheel() {
                   return (
                     <div 
                       key={item.absolutePosition}
-                      className={`relative flex flex-col items-center justify-center h-24 border-x border-slate-700/50 transition-colors ${bgClass}`}
+                      className={`relative flex flex-col items-center justify-center h-20 sm:h-24 border-x border-slate-700/50 transition-colors ${bgClass}`}
                       style={{ width: CELL_WIDTH }}
                     >
                       {isAccidental ? (
                         <>
-                          <span className="text-sm font-mono">{item.note.sharp}</span>
-                          <span className="text-xs opacity-50 font-mono">{item.note.flat}</span>
+                          <span className="text-xs sm:text-sm font-mono">{item.note.sharp}</span>
+                          <span className="text-[10px] sm:text-xs opacity-50 font-mono">{item.note.flat}</span>
                         </>
                       ) : (
-                        <span className="text-2xl font-bold font-mono">{item.note.natural}</span>
+                        <span className="text-xl sm:text-2xl font-bold font-mono">{item.note.natural}</span>
                       )}
                       
                       {hasHalfStepMarker && (
-                        <div className="absolute right-0 translate-x-1/2 top-1/2 -translate-y-1/2 z-10 bg-slate-800 text-slate-400 text-[10px] px-1.5 py-0.5 rounded-md border border-slate-600 shadow-sm pointer-events-none whitespace-nowrap">
-                          半音
+                        <div className="absolute right-0 translate-x-1/2 top-1/2 -translate-y-1/2 z-10 bg-slate-800 text-slate-400 text-[9px] sm:text-[10px] px-1 sm:px-1.5 py-0.5 rounded-md border border-slate-600 shadow-sm pointer-events-none whitespace-nowrap">
+                          半
                         </div>
                       )}
                     </div>
@@ -266,12 +272,12 @@ export function SemitoneWheel() {
               <div className="absolute top-0 bottom-0 w-1 bg-gold-500 z-10 pointer-events-none shadow-[0_0_15px_rgba(201,185,122,0.6)]" />
             </div>
 
-            <div className="h-20 mt-4 flex justify-center items-start">
+            <div className="h-16 sm:h-20 mt-4 flex justify-center items-start">
               {guitarInfo && (
                 <motion.div 
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="px-6 py-3 bg-indigo-900/40 rounded-xl border border-indigo-500/30 text-center text-indigo-300 font-bold shadow-lg"
+                  className="px-4 sm:px-6 py-2 sm:py-3 bg-indigo-900/40 rounded-xl border border-indigo-500/30 text-center text-indigo-300 text-sm sm:text-base font-bold shadow-lg"
                 >
                   🎸 {guitarInfo}
                 </motion.div>
@@ -288,7 +294,7 @@ export function SemitoneWheel() {
             transition={{ duration: 0.5, ease: "easeInOut" }}
             className="w-full flex flex-col items-center"
           >
-            <div className="relative w-72 h-72">
+            <div className="relative w-64 h-64 sm:w-72 sm:h-72">
               <motion.div 
                 className="absolute inset-0 z-20 rounded-full cursor-grab active:cursor-grabbing"
                 drag="x"
@@ -361,12 +367,12 @@ export function SemitoneWheel() {
         )}
       </div>
 
-      <div className="h-20 mt-4 flex justify-center items-start w-full">
+      <div className="h-20 mt-2 sm:mt-4 flex justify-center items-start w-full">
         {!showMajorScale && (
           <motion.div 
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="px-6 py-3 bg-slate-800 rounded-xl border border-slate-700 text-center shadow-lg"
+            className="px-4 sm:px-6 py-2 sm:py-3 bg-slate-800 rounded-xl border border-slate-700 text-center shadow-lg w-full sm:w-auto"
           >
             {(() => {
               const distance = Math.abs(basePosition - rootPosition) % 12;
@@ -375,7 +381,7 @@ export function SemitoneWheel() {
               const rootName = rootNote.natural || (accidentalMode === 'sharp' ? rootNote.sharp : rootNote.flat);
               const selName = selNote.natural || (accidentalMode === 'sharp' ? selNote.sharp : selNote.flat);
 
-              if (distance === 0) return <span className="text-gold-400 font-bold">起始音設定為 {rootName}</span>;
+              if (distance === 0) return <span className="text-gold-400 font-bold text-sm sm:text-base">起始音設定為 {rootName}</span>;
               
               const distLabel = distance === 1 ? '半音' : distance === 2 ? '全音' : `${distance} 個半音`;
               const badgeClass = distance === 1 ? 'bg-red-500/20 text-red-400 border-red-500/30' : 
@@ -383,9 +389,9 @@ export function SemitoneWheel() {
                                  'bg-slate-700 text-slate-300 border-slate-600';
 
               return (
-                <div className="flex items-center gap-2">
-                  <span className="text-slate-300">從起始音 <strong className="text-white">{rootName}</strong> 到 <strong className="text-white">{selName}</strong> 的距離是</span>
-                  <span className={`px-3 py-1 rounded-full font-bold border ${badgeClass}`}>{distLabel}</span>
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2">
+                  <span className="text-slate-300 text-xs sm:text-sm">從 <strong className="text-white">{rootName}</strong> 到 <strong className="text-white">{selName}</strong> 的距離是</span>
+                  <span className={`px-2 py-0.5 sm:px-3 sm:py-1 rounded-full font-bold border text-xs sm:text-sm ${badgeClass}`}>{distLabel}</span>
                 </div>
               );
             })()}
@@ -393,13 +399,13 @@ export function SemitoneWheel() {
         )}
       </div>
 
-      <div className="mt-8 flex justify-center">
+      <div className="mt-4 sm:mt-8 flex justify-center">
         <Button 
           variant={showMajorScale ? 'default' : 'outline'}
           className={showMajorScale ? 'bg-blue-600 hover:bg-blue-700 text-white border-blue-500' : 'border-slate-600 text-slate-300 hover:bg-slate-800'}
           onClick={() => setShowMajorScale(!showMajorScale)}
         >
-          <Music size={18} className="mr-2" /> {showMajorScale ? '隱藏大調音階' : '顯示大調音階'}
+          <Music size={18} className="mr-2" /> {showMajorScale ? '隱藏音階' : '顯示音階'}
         </Button>
       </div>
 
@@ -407,39 +413,39 @@ export function SemitoneWheel() {
         <motion.div 
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: 'auto' }}
-          className="mt-6 bg-slate-800/50 p-6 rounded-2xl border border-slate-700 w-full max-w-2xl mx-auto"
+          className="mt-6 bg-slate-800/50 p-4 sm:p-6 rounded-2xl border border-slate-700 w-full max-w-2xl mx-auto overflow-hidden"
         >
-          <h4 className="text-center text-gold-400 font-bold mb-6 flex items-center justify-center gap-2">
-            <Music size={18} /> 大調音階公式
+          <h4 className="text-center text-gold-400 font-bold mb-4 sm:mb-6 flex items-center justify-center gap-2 text-sm sm:text-base">
+            <Music size={16} /> 大調音階公式
           </h4>
           
-          <div className="flex items-center justify-center gap-1 md:gap-2 font-mono overflow-x-auto pb-4">
+          <div className="flex items-center justify-center gap-0.5 sm:gap-2 font-mono overflow-x-auto no-scrollbar pb-2">
             {scaleNotes.map((note, i) => (
               <React.Fragment key={i}>
-                <div className="flex flex-col items-center">
-                  <div className="w-10 h-10 rounded-full bg-blue-500/20 border border-blue-500/50 flex items-center justify-center text-white font-bold text-lg shadow-[0_0_15px_rgba(59,130,246,0.2)]">
+                <div className="flex flex-col items-center flex-shrink-0">
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-blue-500/20 border border-blue-500/50 flex items-center justify-center text-white font-bold text-sm sm:text-lg shadow-[0_0_15px_rgba(59,130,246,0.2)]">
                     {note}
                   </div>
                 </div>
-                <div className="flex flex-col items-center justify-center w-6 md:w-10">
-                  <span className={`text-[10px] md:text-xs font-bold px-1.5 py-0.5 rounded-full ${
+                <div className="flex flex-col items-center justify-center w-5 sm:w-10 flex-shrink-0">
+                  <span className={`text-[8px] sm:text-xs font-bold px-1 sm:px-1.5 py-0.5 rounded-full ${
                     (i === 2 || i === 6) ? 'bg-red-500/20 text-red-400' : 'bg-green-500/20 text-green-400'
                   }`}>
                     {(i === 2 || i === 6) ? '半' : '全'}
                   </span>
-                  <div className="h-px w-full bg-slate-700 mt-2"></div>
+                  <div className="h-px w-full bg-slate-700 mt-1 sm:mt-2"></div>
                 </div>
               </React.Fragment>
             ))}
-            <div className="flex flex-col items-center">
-              <div className="w-10 h-10 rounded-full bg-blue-500/20 border border-blue-500/50 flex items-center justify-center text-white font-bold text-lg shadow-[0_0_15px_rgba(59,130,246,0.2)]">
+            <div className="flex flex-col items-center flex-shrink-0">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-blue-500/20 border border-blue-500/50 flex items-center justify-center text-white font-bold text-sm sm:text-lg shadow-[0_0_15px_rgba(59,130,246,0.2)]">
                 {scaleNotes[0]}
               </div>
             </div>
           </div>
           
-          <p className="text-center text-slate-400 text-sm mt-4">
-            不管從哪個音開始，間隔永遠是 <strong className="text-slate-200">全-全-半-全-全-全-半</strong>
+          <p className="text-center text-slate-400 text-[10px] sm:text-sm mt-4">
+            音程間隔：<strong className="text-slate-200">全-全-半-全-全-全-半</strong>
           </p>
         </motion.div>
       )}

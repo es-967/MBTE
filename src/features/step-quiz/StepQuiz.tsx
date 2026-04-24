@@ -107,41 +107,44 @@ export function StepQuiz({ isChallenge, targetLevel, mode = 'mixed', moduleName 
   if (!question) return null;
 
   return (
-    <div className="max-w-md mx-auto p-6 space-y-6 animate-in fade-in duration-500">
-      <div className="flex items-center justify-between text-sm font-medium text-slate-500">
-        <div className="flex items-center gap-3">
+    <div className="max-w-md mx-auto p-4 sm:p-6 space-y-4 sm:space-y-6 animate-in fade-in duration-500">
+      <div className="flex items-center justify-between text-xs sm:text-sm font-medium text-slate-500 px-1">
+        <div className="flex items-center gap-2 sm:gap-3">
           <button 
             onClick={onHome}
-            className="flex items-center gap-1 text-sm font-semibold text-slate-500 hover:text-slate-800 transition-colors"
+            className="flex items-center gap-1 font-semibold text-slate-500 hover:text-slate-800 transition-colors"
           >
             ← 放棄
           </button>
-          <span className="text-indigo-600 font-bold">Lv{targetLevel}</span>
+          <span className="text-indigo-600 font-bold bg-indigo-50 px-2 py-0.5 rounded ml-1 sm:ml-2">Lv{targetLevel}</span>
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 sm:gap-4">
           {isChallenge && (
-            <span className={`font-display font-bold text-lg px-3 py-1 rounded-full ${timeLeft <= 10 ? 'bg-rose-100 text-rose-600 animate-pulse' : 'bg-indigo-50 text-indigo-600'}`}>
+            <span className={`font-display font-bold text-base sm:text-lg px-2 sm:px-3 py-1 rounded-full ${timeLeft <= 10 ? 'bg-rose-100 text-rose-600 animate-pulse' : 'bg-indigo-50 text-indigo-600'}`}>
               ⏱ {timeLeft}s
             </span>
           )}
           {!isChallenge && (
-            <span className="bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full">得分 {score}</span>
+            <span className="bg-emerald-50 text-emerald-700 px-2 sm:px-3 py-1 rounded-full whitespace-nowrap">得分 {score}</span>
           )}
-          {combo > 1 && (
-            <motion.div 
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              key={combo}
-              className="text-amber-500 font-bold italic"
-            >
-              {combo} Combo!
-            </motion.div>
-          )}
+          <AnimatePresence>
+            {combo > 1 && (
+              <motion.div 
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.8, opacity: 0 }}
+                key={combo}
+                className="text-amber-500 font-bold italic whitespace-nowrap"
+              >
+                {combo} Combo!
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
 
-      <div className="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm relative overflow-hidden">
+      <div className="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-sm relative overflow-hidden">
         <AnimatePresence mode="wait">
           <motion.div
             key={question.title + question.subtitle}
@@ -150,26 +153,26 @@ export function StepQuiz({ isChallenge, targetLevel, mode = 'mixed', moduleName 
             exit={{ opacity: 0, x: -20 }}
             className="text-center"
           >
-            <p className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-6">{question.subtitle}</p>
-            <div className="flex items-center justify-center gap-6 mb-10">
+            <p className="text-[10px] sm:text-sm font-semibold text-slate-400 uppercase tracking-wider mb-4 sm:mb-6">{question.subtitle}</p>
+            <div className="flex items-center justify-center gap-3 sm:gap-6 mb-6 sm:mb-10">
               {question.title.includes('→') ? (
                 <>
-                  <div className="w-24 h-24 bg-slate-50 rounded-2xl flex items-center justify-center text-4xl font-display font-bold text-slate-800 shadow-sm border border-slate-200">
+                  <div className="w-16 h-16 sm:w-24 sm:h-24 bg-slate-50 rounded-2xl flex items-center justify-center text-2xl sm:text-4xl font-display font-bold text-slate-800 shadow-sm border border-slate-200">
                     {question.title.split('→')[0].trim()}
                   </div>
-                  <div className="text-slate-300 text-3xl">→</div>
-                  <div className="w-24 h-24 bg-slate-50 rounded-2xl flex items-center justify-center text-4xl font-display font-bold text-slate-800 shadow-sm border border-slate-200">
+                  <div className="text-slate-300 text-2xl sm:text-3xl">→</div>
+                  <div className="w-16 h-16 sm:w-24 sm:h-24 bg-slate-50 rounded-2xl flex items-center justify-center text-2xl sm:text-4xl font-display font-bold text-slate-800 shadow-sm border border-slate-200">
                     {question.title.split('→')[1].trim()}
                   </div>
                 </>
               ) : (
-                <div className="px-8 py-6 bg-slate-50 rounded-2xl flex items-center justify-center text-3xl font-display font-bold text-slate-800 shadow-sm border border-slate-200">
+                <div className="px-6 py-4 sm:px-8 sm:py-6 bg-slate-50 rounded-2xl flex items-center justify-center text-2xl sm:text-3xl font-display font-bold text-slate-800 shadow-sm border border-slate-200">
                   {question.title}
                 </div>
               )}
             </div>
 
-            <div className="grid grid-cols-2 gap-3 mb-6">
+            <div className="grid grid-cols-2 gap-2 sm:gap-3 mb-4 sm:mb-6">
               {question.options.map((opt, i) => {
                 const isTheCorrectAnswer = opt === question.answer;
                 return (
@@ -177,7 +180,7 @@ export function StepQuiz({ isChallenge, targetLevel, mode = 'mixed', moduleName 
                     key={i}
                     onClick={() => handleAnswer(opt)}
                     disabled={isWrong || isCorrect}
-                    className={`py-4 text-lg ${
+                    className={`py-3 sm:py-4 text-sm sm:text-lg h-auto min-h-[50px] ${
                       isWrong && isTheCorrectAnswer
                         ? 'bg-emerald-50 border-emerald-500 text-emerald-800'
                         : isWrong
@@ -196,11 +199,11 @@ export function StepQuiz({ isChallenge, targetLevel, mode = 'mixed', moduleName 
 
             {/* Feedback Block */}
             {(isCorrect || isWrong) && (
-              <div className={`p-4 rounded-xl border text-left ${isCorrect ? 'bg-emerald-50 border-emerald-200 text-emerald-800' : 'bg-rose-50 border-rose-200 text-rose-800'} animate-in slide-in-from-bottom-2`}>
-                <p className="font-bold text-lg mb-1">
+              <div className={`p-3 sm:p-4 rounded-xl border text-left ${isCorrect ? 'bg-emerald-50 border-emerald-200 text-emerald-800' : 'bg-rose-50 border-rose-200 text-rose-800'} animate-in slide-in-from-bottom-2`}>
+                <p className="font-bold text-base sm:text-lg mb-0.5 sm:mb-1">
                   {isCorrect ? '✨ 正確！' : '❌ 答錯了'}
                 </p>
-                <p className="font-medium opacity-90">
+                <p className="text-sm sm:text-base font-medium opacity-90">
                   {isCorrect 
                     ? (question.type === 'semitones' ? `是 ${formatOption(question.answer, question.type)}` : `相距 ${formatOption(question.answer, question.type)}`)
                     : `正確答案：${formatOption(question.answer, question.type)}`

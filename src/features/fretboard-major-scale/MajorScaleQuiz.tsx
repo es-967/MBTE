@@ -202,7 +202,7 @@ export function MajorScaleQuiz({ mode, targetShape, onHome }: MajorScaleQuizProp
 
   const renderFretboard = () => {
     return (
-      <div className="relative w-full overflow-x-auto select-none rounded-xl bg-slate-800 p-2 sm:p-4 border-4 border-slate-900 shadow-xl my-6">
+      <div className="relative w-full overflow-x-auto select-none rounded-xl bg-slate-800 p-1.5 sm:p-4 border-2 sm:border-4 border-slate-900 shadow-xl my-4 sm:my-6">
         {quizState === 'memorizing' && countdown > 0 && (
           <div className="absolute inset-0 z-50 flex items-center justify-center bg-slate-900/40 pointer-events-none rounded-lg">
             <motion.div 
@@ -210,13 +210,13 @@ export function MajorScaleQuiz({ mode, targetShape, onHome }: MajorScaleQuizProp
               initial={{ scale: 2, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.5, opacity: 0 }}
-              className="text-8xl font-black text-white drop-shadow-[0_4px_10px_rgba(0,0,0,0.5)]"
+              className="text-6xl sm:text-8xl font-black text-white drop-shadow-[0_4px_10px_rgba(0,0,0,0.5)]"
             >
               {countdown}
             </motion.div>
           </div>
         )}
-        <div className="min-w-[600px] flex text-white relative">
+        <div className="min-w-[480px] sm:min-w-[600px] flex text-white relative">
           <div className="absolute top-0 left-8 flex w-[calc(100%-2rem)] h-6 z-10 pointer-events-none">
             {Array.from({ length: 16 }).map((_, f) => (
               <div key={f} className="flex-1 flex justify-center text-[10px] text-slate-400 font-bold opacity-50">
@@ -224,10 +224,10 @@ export function MajorScaleQuiz({ mode, targetShape, onHome }: MajorScaleQuizProp
               </div>
             ))}
           </div>
-          <div className="flex flex-col mt-6 w-full gap-0 py-2 relative bg-slate-800/50 rounded-lg">
+          <div className="flex flex-col mt-6 w-full gap-0 py-1 sm:py-2 relative bg-slate-800/50 rounded-lg">
             {STRINGS.map((pitch, sIdx) => (
-              <div key={sIdx} className="flex items-stretch group relative h-9 sm:h-11">
-                <div className="w-8 flex justify-center items-center text-xs font-bold text-slate-400 font-mono relative z-20 pointer-events-none">
+              <div key={sIdx} className="flex items-stretch group relative h-8 sm:h-11">
+                <div className="w-8 flex justify-center items-center text-[10px] sm:text-xs font-bold text-slate-400 font-mono relative z-20 pointer-events-none">
                   {STRING_NAMES[sIdx]}
                 </div>
                 <div className="absolute right-0 w-[calc(100%-2rem)] h-[2px] bg-gradient-to-r from-slate-600 via-slate-400 to-slate-500 shadow-sm top-1/2 -translate-y-1/2 pointer-events-none z-10" 
@@ -248,7 +248,7 @@ export function MajorScaleQuiz({ mode, targetShape, onHome }: MajorScaleQuizProp
 
                     if (quizState === 'memorizing') {
                       if (preGivenRoot) {
-                        dotClass = 'bg-amber-400 text-amber-900 ring-4 ring-white shadow-[0_0_15px_rgba(251,191,36,0.6)]';
+                        dotClass = 'bg-amber-400 text-amber-900 ring-2 sm:ring-4 ring-white shadow-[0_0_15px_rgba(251,191,36,0.6)]';
                         content = '1';
                       } else if (isTarget) {
                         dotClass = 'bg-sky-400 text-sky-900 shadow-md opacity-90';
@@ -256,26 +256,25 @@ export function MajorScaleQuiz({ mode, targetShape, onHome }: MajorScaleQuizProp
                       }
                     } else if (quizState === 'playing') {
                       if (preGivenRoot) {
-                        dotClass = 'bg-amber-400 text-amber-900 ring-4 ring-white shadow-[0_0_15px_rgba(251,191,36,0.6)]';
+                        dotClass = 'bg-amber-400 text-amber-900 ring-2 sm:ring-4 ring-white shadow-[0_0_15px_rgba(251,191,36,0.6)]';
                         content = '1';
                       } else if (isSelected) {
                         if (mode === 'recall' && Array.from(selectedNodes).length === 1 && selectedNodes.has(key)) {
-                          // first selected node might be root visually
-                          dotClass = 'bg-amber-100 text-amber-800 ring-4 ring-amber-300 shadow-sm';
-                          content = '1'; // Give a visual hint that this is the root they selected
+                          dotClass = 'bg-amber-100 text-amber-800 ring-2 sm:ring-4 ring-amber-300 shadow-sm';
+                          content = '1';
                         } else {
                           dotClass = 'bg-slate-200 text-slate-800 ring-2 ring-slate-400 shadow-sm';
                         }
                       }
                     } else if (quizState === 'result') {
                       if (preGivenRoot) {
-                        dotClass = 'bg-amber-400 text-amber-900 ring-4 ring-white';
+                        dotClass = 'bg-amber-400 text-amber-900 ring-2 sm:ring-4 ring-white';
                         content = '1';
                       } else if (isSelected && isTarget) {
-                        dotClass = 'bg-emerald-400 text-emerald-900 ring-4 ring-emerald-200 shadow-[0_0_15px_rgba(52,211,153,0.5)]';
+                        dotClass = 'bg-emerald-400 text-emerald-900 ring-2 sm:ring-4 ring-emerald-200 shadow-[0_0_15px_rgba(52,211,153,0.5)]';
                         content = targetNode.degree;
                       } else if (isSelected && !isTarget) {
-                        dotClass = 'bg-rose-500 text-white ring-4 ring-rose-200';
+                        dotClass = 'bg-rose-500 text-white ring-2 sm:ring-4 ring-rose-200';
                         content = 'X';
                       } else if (!isSelected && isTarget) {
                         dotClass = 'bg-transparent border-2 border-emerald-400 text-emerald-400 animate-pulse';
@@ -286,11 +285,11 @@ export function MajorScaleQuiz({ mode, targetShape, onHome }: MajorScaleQuizProp
                     return (
                       <div 
                         key={f} 
-                        className={`flex-1 flex justify-center items-center h-full relative cursor-pointer border-r border-slate-600 hover:bg-white/5 transition-colors ${f === 0 ? 'border-r-4 border-r-slate-300 bg-slate-900/40' : ''}`}
+                        className={`flex-1 flex justify-center items-center h-full relative cursor-pointer border-r border-slate-600 hover:bg-white/5 transition-colors ${f === 0 ? 'border-r-2 sm:border-r-4 border-r-slate-300 bg-slate-900/40' : ''}`}
                         onClick={() => toggleNode(sIdx, f)}
                       >
                         {dotClass && (
-                          <div className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-bold z-30 transition-all ${dotClass}`}>
+                          <div className={`w-4 h-4 sm:w-6 sm:h-6 rounded-full flex items-center justify-center text-[8px] sm:text-xs font-bold z-30 transition-all ${dotClass}`}>
                             {content}
                           </div>
                         )}
@@ -302,18 +301,18 @@ export function MajorScaleQuiz({ mode, targetShape, onHome }: MajorScaleQuizProp
             ))}
 
             {/* Bottom Fret Markers (Side Dots) */}
-            <div className="flex items-center h-4 mt-1">
+            <div className="flex items-center h-3 sm:h-4 mt-1">
               <div className="w-8" />
               <div className="flex flex-1">
                 {Array.from({ length: 16 }).map((_, f) => (
                   <div key={f} className="flex-1 flex justify-center items-start">
                     {[3, 5, 7, 9, 15].includes(f) && (
-                      <div className="w-1.5 h-1.5 rounded-full bg-slate-500/60" />
+                      <div className="w-1 sm:w-1.5 h-1 sm:h-1.5 rounded-full bg-slate-500/60" />
                     )}
                     {f === 12 && (
-                      <div className="flex gap-1 -translate-x-[1px]">
-                        <div className="w-1.5 h-1.5 rounded-full bg-slate-500/60" />
-                        <div className="w-1.5 h-1.5 rounded-full bg-slate-500/60" />
+                      <div className="flex gap-0.5 sm:gap-1 -translate-x-[1px]">
+                        <div className="w-1 sm:w-1.5 h-1 sm:h-1.5 rounded-full bg-slate-500/60" />
+                        <div className="w-1 sm:w-1.5 h-1 sm:h-1.5 rounded-full bg-slate-500/60" />
                       </div>
                     )}
                   </div>
@@ -329,26 +328,38 @@ export function MajorScaleQuiz({ mode, targetShape, onHome }: MajorScaleQuizProp
   const getTitle = () => {
     const rootName = getNoteName(STRINGS[question.rootSIdx] + question.rootFret);
     if (mode === 'memorize') {
-      return `${rootName} 大調音階 (${question.shapeId} Shape)`;
+      return (
+        <span>{rootName} 大調音階 <br className="sm:hidden" /> <span className="text-indigo-600">({question.shapeId} Shape)</span></span>
+      );
     } else if (mode === 'recall') {
-      return `${rootName} 大調音階 (${question.shapeId} Shape, 提示: 主音請下在第 ${STRING_NAMES[question.rootSIdx]} 弦)`;
+      return (
+        <span className="leading-tight">
+          {rootName} 大調音階 <span className="text-indigo-600">({question.shapeId} Shape)</span>
+          <br />
+          <span className="text-sm font-medium text-slate-400 uppercase tracking-widest block mt-1">
+            主音於第 {STRING_NAMES[question.rootSIdx]} 弦
+          </span>
+        </span>
+      );
     } else if (mode === 'random') {
-      return `${rootName} 大調音階 (${question.shapeId} Shape)`;
+      return (
+        <span>{rootName} 大調音階 <br className="sm:hidden" /> <span className="text-rose-500">({question.shapeId} Shape)</span></span>
+      );
     }
     return '';
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-4 sm:p-6 space-y-6 animate-in fade-in duration-500">
-      <div className="flex items-center justify-between text-sm font-medium text-slate-500">
-        <div className="flex items-center gap-3">
-          <button onClick={onHome} className="flex items-center gap-1 text-sm font-semibold text-slate-500 hover:text-slate-800 transition-colors">
+    <div className="max-w-4xl mx-auto p-2 sm:p-6 space-y-4 sm:space-y-6 animate-in fade-in duration-500">
+      <div className="flex items-center justify-between text-xs sm:text-sm font-medium text-slate-500 px-2">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <button onClick={onHome} className="flex items-center gap-1 font-semibold text-slate-500 hover:text-slate-800 transition-colors">
             ← 放棄
           </button>
-          <span className="text-indigo-600 font-bold">Lv{globalLevel}</span>
+          <span className="text-indigo-600 font-bold bg-indigo-50 px-2 py-0.5 rounded">Lv{globalLevel}</span>
         </div>
-        <div className="flex items-center gap-4">
-          <span className="bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full">
+        <div className="flex items-center gap-2 sm:gap-4">
+          <span className="bg-emerald-50 text-emerald-700 px-2 sm:px-3 py-1 rounded-full">
             得分 {score}
           </span>
           <AnimatePresence>
@@ -367,12 +378,12 @@ export function MajorScaleQuiz({ mode, targetShape, onHome }: MajorScaleQuizProp
         </div>
       </div>
 
-      <div className="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-sm relative overflow-hidden">
-        <div className="text-center mb-8">
-          <h3 className="text-2xl font-bold text-slate-800 mb-2">
+      <div className="bg-white rounded-2xl p-4 sm:p-8 border border-slate-200 shadow-sm relative overflow-hidden">
+        <div className="text-center mb-4 sm:mb-8">
+          <h3 className="text-xl sm:text-2xl font-bold text-slate-800 mb-1 sm:mb-2">
             {getTitle()}
           </h3>
-          <p className="text-slate-500">
+          <p className="text-xs sm:text-slate-500 font-medium text-slate-400">
             {quizState === 'memorizing' ? '請記住音階的位置...' : 
              quizState === 'playing' ? '請點擊指板，填滿所有音階位置！' : 
              resultStats.wrong === 0 && resultStats.missed === 0 ? '🎉 完美答對！' : '還有進步空間，看看漏了或按錯了哪裡'}
@@ -381,14 +392,14 @@ export function MajorScaleQuiz({ mode, targetShape, onHome }: MajorScaleQuizProp
 
         {renderFretboard()}
 
-        <div className="flex justify-center mt-8">
+        <div className="flex justify-center mt-4 sm:mt-8 px-4">
           {quizState === 'playing' && (
-            <Button size="lg" className="w-48 text-lg" onClick={handleSubmit}>
+            <Button size="lg" className="w-full sm:w-48 text-lg h-12 sm:h-14 font-bold" onClick={handleSubmit}>
               送出答案
             </Button>
           )}
           {quizState === 'result' && (
-            <Button size="lg" className="w-48 text-lg" onClick={loadNewQuestion}>
+            <Button size="lg" className="w-full sm:w-48 text-lg h-12 sm:h-14 font-bold" onClick={loadNewQuestion}>
               下一題
             </Button>
           )}

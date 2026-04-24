@@ -34,48 +34,48 @@ export function ToolModal({ isOpen, onClose }: ToolModalProps) {
               className="relative w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col"
             >
               {/* Header */}
-              <div className="flex items-center justify-between p-4 border-b border-slate-100 bg-slate-50">
-                <div className="flex bg-slate-200/50 p-1 rounded-xl">
+              <div className="flex items-center justify-between p-2 sm:p-4 border-b border-slate-100 bg-slate-50">
+                <div className="flex bg-slate-200/50 p-1 rounded-xl overflow-x-auto no-scrollbar max-w-[calc(100%-48px)]">
                   <button
                     onClick={() => setActiveTab('wheel')}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-all ${
+                    className={`flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-bold transition-all whitespace-nowrap ${
                       activeTab === 'wheel' 
                         ? 'bg-white text-indigo-600 shadow-sm' 
                         : 'text-slate-500 hover:text-slate-700'
                     }`}
                   >
-                    <CircleDashed size={16} />
+                    <CircleDashed size={14} className="sm:w-4 sm:h-4" />
                     半音羅盤
                   </button>
                   <button
                     onClick={() => setActiveTab('degree')}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-all ${
+                    className={`flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-bold transition-all whitespace-nowrap ${
                       activeTab === 'degree' 
                         ? 'bg-white text-indigo-600 shadow-sm' 
                         : 'text-slate-500 hover:text-slate-700'
                     }`}
                   >
-                    <ListOrdered size={16} />
+                    <ListOrdered size={14} className="sm:w-4 sm:h-4" />
                     級數對照
                   </button>
                   <button
                     onClick={() => setActiveTab('fretboard')}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-all ${
+                    className={`flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-bold transition-all whitespace-nowrap ${
                       activeTab === 'fretboard' 
                         ? 'bg-white text-indigo-600 shadow-sm' 
                         : 'text-slate-500 hover:text-slate-700'
                     }`}
                   >
-                    <Guitar size={16} />
+                    <Guitar size={14} className="sm:w-4 sm:h-4" />
                     吉他指板
                   </button>
                 </div>
                 
                 <button
                   onClick={onClose}
-                  className="p-2 bg-slate-100 text-slate-400 hover:text-slate-600 hover:bg-slate-200 rounded-full transition-colors"
+                  className="p-1.5 sm:p-2 bg-slate-100 text-slate-400 hover:text-slate-600 hover:bg-slate-200 rounded-full transition-colors flex-shrink-0"
                 >
-                  <X size={20} />
+                  <X size={18} className="sm:w-5 sm:h-5" />
                 </button>
               </div>
 

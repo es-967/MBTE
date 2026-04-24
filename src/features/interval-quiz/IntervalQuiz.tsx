@@ -135,41 +135,41 @@ export function IntervalQuiz({ isChallenge, targetLevel, onHome, onPlatformHome 
   };
 
   return (
-    <div className="max-w-md mx-auto p-6 space-y-6 animate-in fade-in duration-500">
+    <div className="max-w-md mx-auto p-4 sm:p-6 space-y-4 sm:space-y-6 animate-in fade-in duration-500">
       {/* Header */}
-      <div className="flex items-center justify-between text-sm font-medium text-slate-500">
-        <div className="flex items-center gap-3">
-          <span className="bg-slate-100 text-slate-700 px-3 py-1 rounded-full">第 {qnum - 1} 題</span>
+      <div className="flex items-center justify-between text-xs sm:text-sm font-medium text-slate-500 px-1">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <span className="bg-slate-100 text-slate-700 px-2 sm:px-3 py-1 rounded-full whitespace-nowrap">第 {qnum - 1} 題</span>
           <span className="text-indigo-600 font-bold">Lv{targetLevel}</span>
         </div>
         {isChallenge ? (
-          <span className={`font-display font-bold text-lg px-3 py-1 rounded-full ${timeLeft <= 10 ? 'bg-rose-100 text-rose-600 animate-pulse' : 'bg-indigo-50 text-indigo-600'}`}>
+          <span className={`font-display font-bold text-base sm:text-lg px-2 sm:px-3 py-1 rounded-full ${timeLeft <= 10 ? 'bg-rose-100 text-rose-600 animate-pulse' : 'bg-indigo-50 text-indigo-600'}`}>
             ⏱ {timeLeft}s
           </span>
         ) : (
-          <span className="bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full">答對 {score} / {total}</span>
+          <span className="bg-emerald-50 text-emerald-700 px-2 sm:px-3 py-1 rounded-full whitespace-nowrap">答對 {score} / {total}</span>
         )}
       </div>
 
       {/* Notes display */}
-      <div className="text-center py-6 bg-white rounded-2xl border border-slate-200/60 shadow-sm">
-        <p className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-3">這兩個音是什麼音程？</p>
-        <p className="text-4xl font-display font-bold tracking-[0.2em] text-slate-800">
-          {question.root} <span className="text-slate-300 mx-2">→</span> {question.note2}
+      <div className="text-center py-4 sm:py-6 bg-white rounded-2xl border border-slate-200/60 shadow-sm px-2">
+        <p className="text-[10px] sm:text-sm font-semibold text-slate-400 uppercase tracking-wider mb-2 sm:mb-3 whitespace-nowrap">這兩個音是什麼音程？</p>
+        <p className="text-2xl sm:text-4xl font-display font-bold tracking-[0.15em] sm:tracking-[0.2em] text-slate-800">
+          {question.root} <span className="text-slate-300 mx-1 sm:mx-2">→</span> {question.note2}
         </p>
       </div>
 
       {/* Step 1: Quality */}
-      <div className="space-y-3">
-        <p className="text-sm font-semibold text-slate-500 flex items-center gap-2">
-          <span className="flex items-center justify-center w-5 h-5 rounded-full bg-indigo-100 text-indigo-700 text-xs">1</span> 
+      <div className="space-y-2 sm:space-y-3">
+        <p className="text-xs sm:text-sm font-semibold text-slate-500 flex items-center gap-2">
+          <span className="flex items-center justify-center w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-indigo-100 text-indigo-700 text-[10px] sm:text-xs">1</span> 
           選擇性質
         </p>
-        <div className="grid grid-cols-5 gap-2">
+        <div className="grid grid-cols-5 gap-1.5 sm:gap-2">
           {question.qualityOptions.map(q => (
             <button
               key={q}
-              className={qualityBtnClass(q)}
+              className={`${qualityBtnClass(q)} py-2 sm:py-2.5 text-xs sm:text-sm`}
               onClick={() => selectQuality(q)}
               disabled={submitted}
             >
@@ -180,16 +180,16 @@ export function IntervalQuiz({ isChallenge, targetLevel, onHome, onPlatformHome 
       </div>
 
       {/* Step 2: Degree */}
-      <div className="space-y-3">
-        <p className="text-sm font-semibold text-slate-500 flex items-center gap-2">
-          <span className="flex items-center justify-center w-5 h-5 rounded-full bg-indigo-100 text-indigo-700 text-xs">2</span> 
+      <div className="space-y-2 sm:space-y-3">
+        <p className="text-xs sm:text-sm font-semibold text-slate-500 flex items-center gap-2">
+          <span className="flex items-center justify-center w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-indigo-100 text-indigo-700 text-[10px] sm:text-xs">2</span> 
           選擇度數
         </p>
-        <div className="grid grid-cols-4 gap-2">
+        <div className="grid grid-cols-4 gap-1.5 sm:gap-2">
           {question.degreeOptions.map(d => (
             <button
               key={d}
-              className={degreeBtnClass(d)}
+              className={`${degreeBtnClass(d)} py-2 sm:py-2.5 text-xs sm:text-sm`}
               onClick={() => selectDegree(d)}
               disabled={submitted}
             >
@@ -201,18 +201,18 @@ export function IntervalQuiz({ isChallenge, targetLevel, onHome, onPlatformHome 
 
       {/* Feedback */}
       {submitted && (
-        <div className={`p-4 rounded-xl border ${isCorrect ? 'bg-emerald-50 border-emerald-200 text-emerald-800' : 'bg-rose-50 border-rose-200 text-rose-800'} animate-in slide-in-from-bottom-2`}>
-          <p className="font-bold text-lg mb-1">
+        <div className={`p-3 sm:p-4 rounded-xl border ${isCorrect ? 'bg-emerald-50 border-emerald-200 text-emerald-800' : 'bg-rose-50 border-rose-200 text-rose-800'} animate-in slide-in-from-bottom-2`}>
+          <p className="font-bold text-base sm:text-lg mb-0.5 sm:mb-1">
             {isCorrect ? '✨ 正確！' : '❌ 答錯了'}
           </p>
-          <p className="font-medium opacity-90">
+          <p className="text-sm sm:text-base font-medium opacity-90">
             {isCorrect 
               ? question.answer.name
               : `正確答案：${question.answer.name}`
             }
           </p>
           {!isCorrect && (
-            <p className="text-sm mt-2 opacity-75">
+            <p className="text-[10px] sm:text-sm mt-1.5 sm:mt-2 opacity-75 leading-tight">
               推導：{question.root} 到 {question.note2}，字母距離 {question.answer.deg} 度，半音距離 {question.answer.st} 個 → {question.answer.name}
             </p>
           )}
@@ -220,11 +220,11 @@ export function IntervalQuiz({ isChallenge, targetLevel, onHome, onPlatformHome 
       )}
 
       {/* Actions */}
-      <div className="flex gap-3 pt-2">
+      <div className="flex gap-2 sm:gap-3 pt-1 sm:pt-2">
         {!submitted ? (
           <Button
             size="lg"
-            className="flex-1 text-lg"
+            className="flex-[2] text-base sm:text-lg h-11 sm:h-12"
             onClick={handleSubmit}
             disabled={!canSubmit}
           >
@@ -233,7 +233,7 @@ export function IntervalQuiz({ isChallenge, targetLevel, onHome, onPlatformHome 
         ) : (
           <Button
             size="lg"
-            className="flex-1 text-lg"
+            className="flex-[2] text-base sm:text-lg h-11 sm:h-12"
             onClick={() => nextQuestion(targetLevel)}
           >
             下一題 →
@@ -242,10 +242,10 @@ export function IntervalQuiz({ isChallenge, targetLevel, onHome, onPlatformHome 
         <Button
           size="lg"
           variant="outline"
-          className="px-4"
+          className="flex-1 text-sm sm:text-base h-11 sm:h-12 px-2"
           onClick={onHome}
         >
-          設定
+          放棄
         </Button>
       </div>
     </div>

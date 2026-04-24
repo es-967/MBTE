@@ -61,27 +61,27 @@ export function ModuleStats({
 
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="rounded-2xl bg-indigo-50/80 border border-indigo-100 p-4 text-center">
-          <p className="text-sm font-semibold text-indigo-600/80 uppercase tracking-wider mb-1">{levelLabelOverride || '當前等級'}</p>
-          <p className="text-4xl font-display font-bold text-indigo-700">Lv {displayLevel}</p>
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        <div className="rounded-2xl bg-indigo-50/80 border border-indigo-100 p-3 sm:p-4 text-center">
+          <p className="text-[10px] sm:text-sm font-semibold text-indigo-600/80 uppercase tracking-wider mb-1">{levelLabelOverride || '當前等級'}</p>
+          <p className="text-2xl sm:text-4xl font-display font-bold text-indigo-700">Lv {displayLevel}</p>
         </div>
-        <div className="rounded-2xl bg-emerald-50/80 border border-emerald-100 p-4 text-center">
-          <p className="text-sm font-semibold text-emerald-600/80 uppercase tracking-wider mb-1">{expLabelOverride || '經驗值'}</p>
-          <p className="text-4xl font-display font-bold text-emerald-700">{displayExp}</p>
+        <div className="rounded-2xl bg-emerald-50/80 border border-emerald-100 p-3 sm:p-4 text-center">
+          <p className="text-[10px] sm:text-sm font-semibold text-emerald-600/80 uppercase tracking-wider mb-1">{expLabelOverride || '經驗值'}</p>
+          <p className="text-2xl sm:text-4xl font-display font-bold text-emerald-700">{displayExp}</p>
         </div>
-        <div className="rounded-2xl bg-amber-50/80 border border-amber-100 p-4 text-center">
-          <p className="text-sm font-semibold text-amber-600/80 uppercase tracking-wider mb-1">{streakLabelOverride || '連勝'}</p>
-          <p className="text-4xl font-display font-bold text-amber-700">{displayStreak} {streakIconOverride && <span className="text-2xl">{streakIconOverride}</span>}</p>
+        <div className="rounded-2xl bg-amber-50/80 border border-amber-100 p-3 sm:p-4 text-center">
+          <p className="text-[10px] sm:text-sm font-semibold text-amber-600/80 uppercase tracking-wider mb-1">{streakLabelOverride || '連勝'}</p>
+          <p className="text-2xl sm:text-4xl font-display font-bold text-amber-700">{displayStreak} {streakIconOverride && <span className="text-lg sm:text-2xl">{streakIconOverride}</span>}</p>
         </div>
-        <div className="rounded-2xl bg-purple-50/80 border border-purple-100 p-4 text-center">
-          <p className="text-sm font-semibold text-purple-600/80 uppercase tracking-wider mb-1">{bestScoreLabel}</p>
-          <p className="text-4xl font-display font-bold text-purple-700">{displayScore} <span className="text-2xl text-purple-500/70">{bestScoreUnit}</span></p>
+        <div className="rounded-2xl bg-purple-50/80 border border-purple-100 p-3 sm:p-4 text-center">
+          <p className="text-[10px] sm:text-sm font-semibold text-purple-600/80 uppercase tracking-wider mb-1">{bestScoreLabel}</p>
+          <p className="text-2xl sm:text-4xl font-display font-bold text-purple-700">{displayScore} <span className="text-lg sm:text-2xl text-purple-500/70">{bestScoreUnit}</span></p>
         </div>
       </div>
       {!hideExpBar && (
-        <div className="space-y-2 px-2">
-          <div className="flex justify-between text-sm font-medium text-slate-500">
+        <div className="space-y-2 px-1 sm:px-2">
+          <div className="flex justify-between text-[10px] sm:text-sm font-medium text-slate-500">
             {customProgressLeftText ? customProgressLeftText : (
               <span className="text-indigo-600 font-bold">Lv {displayLevel}</span>
             )}

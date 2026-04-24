@@ -65,6 +65,7 @@ const CHORD_SHAPES: Record<string, Record<number, StringOffsets>> = {
     3: ['X', 'X', 0, 2, 3, 2],
     2: ['X', 'X', 0, 0, 0, 3],
     1: ['X', 'X', 1, -1, 0, 'X'],
+    0: ['X', 'X', 2, 1, 0, 0],
   },
   'm': {
     5: [0, 2, 2, 0, 0, 0],
@@ -72,6 +73,7 @@ const CHORD_SHAPES: Record<string, Record<number, StringOffsets>> = {
     3: ['X', 'X', 0, 2, 3, 1],
     2: ['X', 'X', 0, 0, -1, 'X'],
     1: ['X', 'X', 0, -1, 0, 'X'],
+    0: ['X', 'X', 2, 0, 0, 0],
   },
   '7': {
     5: [0, 2, 0, 1, 0, 0],
@@ -79,6 +81,7 @@ const CHORD_SHAPES: Record<string, Record<number, StringOffsets>> = {
     3: ['X', 'X', 0, 2, 1, 2],
     2: ['X', 'X', 0, 0, 0, 1],
     1: ['X', 2, 1, 2, 0, 'X'],
+    0: ['X', 'X', 0, 1, 0, 0],
   },
   'm7': {
     5: [0, 2, 0, 0, 0, 0],
@@ -86,6 +89,7 @@ const CHORD_SHAPES: Record<string, Record<number, StringOffsets>> = {
     3: ['X', 'X', 0, 2, 1, 1],
     2: ['X', 'X', 0, 0, -1, 1],
     1: ['X', 2, 0, 2, 0, 'X'],
+    0: ['X', 'X', 0, 0, 0, 0],
   },
   'maj7': {
     5: [0, 'X', 1, 1, 0, 'X'],
@@ -93,6 +97,7 @@ const CHORD_SHAPES: Record<string, Record<number, StringOffsets>> = {
     3: ['X', 'X', 0, 2, 2, 2],
     2: ['X', 'X', 0, 0, 0, 2],
     1: ['X', 2, 1, -1, -1, -1],
+    0: ['X', 'X', 1, 1, 0, 0],
   },
   'm7b5': {
     5: [0, 'X', 0, 0, -1, 'X'],
@@ -100,6 +105,7 @@ const CHORD_SHAPES: Record<string, Record<number, StringOffsets>> = {
     3: ['X', 'X', 0, 1, 1, 1],
     2: ['X', 'X', -1, 0, -1, 1],
     1: ['X', 'X', 0, 2, 0, 1],
+    0: ['X', 'X', 0, 0, -1, 0],
   },
   'dim7': {
     5: [0, 'X', -1, 0, -1, 'X'],
@@ -107,6 +113,7 @@ const CHORD_SHAPES: Record<string, Record<number, StringOffsets>> = {
     3: ['X', 'X', 0, 1, 0, 1],
     2: ['X', 'X', -1, 0, -1, 0],
     1: ['X', 'X', 0, 1, 0, 1],
+    0: ['X', 'X', -1, 0, -1, 0],
   },
   'aug': {
     5: [0, 'X', 2, 1, 1, 'X'],
@@ -114,6 +121,7 @@ const CHORD_SHAPES: Record<string, Record<number, StringOffsets>> = {
     3: ['X', 'X', 0, 3, 3, 2],
     2: ['X', 'X', 1, 0, 0, 'X'],
     1: ['X', 'X', 1, 0, 0, 'X'],
+    0: ['X', 'X', 2, 1, 1, 0],
   }
 };
 
@@ -160,7 +168,7 @@ export function FretboardTool() {
     let chordPositions: Pos[] = [];
     if (mode === 'chord' && selectedPos.length === 1) {
       const root = selectedPos[0];
-      const shapeStringIdx = root.stringIdx === 0 ? 5 : root.stringIdx;
+      const shapeStringIdx = root.stringIdx;
       const offsets = CHORD_SHAPES[chordType][shapeStringIdx];
       if (offsets) {
         offsets.forEach((offset, idx) => {
@@ -199,7 +207,7 @@ export function FretboardTool() {
                 
                 {/* Visual String Line */}
                 <div className="absolute right-0 w-[calc(100%-2rem)] h-[1px] bg-gradient-to-r from-slate-600 via-slate-400 to-slate-500 shadow-sm top-1/2 -translate-y-1/2 pointer-events-none z-10" 
-                     style={{ height: `${1 + (5 - sIdx) * 0.4}px` }} />
+                     style={{ height: `${1 + sIdx * 0.4}px` }} />
 
                 {/* Frets */}
                 <div className="flex flex-1 relative z-20">
@@ -216,7 +224,9 @@ export function FretboardTool() {
                     const isRootColor = mode === 'chord' && isChordTarget && ((pitch % 12) === rootPitchClass);
 
                     let dotClass = 'opacity-0 scale-50 group-hover:opacity-30 group-hover:scale-75';
-                    if (isClicked) dotClass = 'opacity-100 scale-100 bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.8)]';
+                    if (isClicked && !(mode === 'chord' && !isChordTarget)) {
+                      dotClass = 'opacity-100 scale-100 bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.8)]';
+                    }
                     if (isOctaveHighlight && !isClicked) dotClass = 'opacity-100 scale-90 bg-indigo-500/80 border border-indigo-300';
                     if (mode === 'chord') {
                       if (isRootColor) dotClass = 'opacity-100 scale-100 bg-rose-500 shadow-[0_0_10px_rgba(244,63,94,0.8)] border border-rose-400';
@@ -285,7 +295,7 @@ export function FretboardTool() {
           <div className="text-center animate-in slide-in-from-top-2">
             <div className="text-3xl font-black text-indigo-600 mb-1">{getNoteName(pitch)}</div>
             <div className="text-sm font-medium text-slate-500">
-              第 {6 - p.stringIdx} 弦, 第 {p.fret} 格
+              第 {p.stringIdx + 1} 弦, 第 {p.fret} 格
             </div>
           </div>
         );
@@ -342,7 +352,7 @@ export function FretboardTool() {
               {getNoteName(pitch)}{chordType}
             </div>
             <div className="text-sm font-medium text-slate-500">
-              根音: 第 {6 - p.stringIdx} 弦, 第 {p.fret} 格
+              根音: 第 {p.stringIdx + 1} 弦, 第 {p.fret} 格
             </div>
           </div>
         );
@@ -392,18 +402,18 @@ export function FretboardTool() {
 
           {/* Chord Type Selector */}
           {mode === 'chord' && (
-            <div className="mt-3 grid grid-cols-4 gap-1 p-1 bg-slate-200 rounded-xl">
+            <div className="mt-3 flex flex-wrap gap-1 sm:gap-2 p-1.5 sm:p-2 bg-slate-200 rounded-xl justify-center">
               {CHORD_TYPES.map(type => (
                 <button
                   key={type.key}
                   onClick={() => setChordType(type.key)}
-                  className={`py-1.5 rounded-lg text-[10.5px] font-bold transition-all ${
+                  className={`py-1.5 sm:py-2 px-2 sm:px-3 rounded-lg text-xs font-bold transition-all whitespace-nowrap ${
                     chordType === type.key
                       ? 'bg-white text-rose-600 shadow-sm ring-1 ring-slate-200'
                       : 'text-slate-600 hover:text-slate-800 hover:bg-slate-50/50'
                   }`}
                 >
-                  {type.key}
+                  {type.name}
                 </button>
               ))}
             </div>

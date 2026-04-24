@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useGameStore, defaultProgress } from '../../store/useGameStore';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/Card';
 import { Button } from '../ui/Button';
@@ -23,6 +23,10 @@ export function ScaleHome({ onStartQuiz, onHome }: ScaleHomeProps) {
     { label: '小調練習', level: 6 },
     { label: '重升記號調性', level: 9 },
   ];
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
     <div className="max-w-4xl mx-auto p-4 sm:p-6 space-y-6 sm:space-y-8 animate-in fade-in duration-500">

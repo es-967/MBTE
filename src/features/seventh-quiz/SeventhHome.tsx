@@ -35,6 +35,10 @@ export function SeventhHome({ onStartQuiz, onHome }: SeventhHomeProps) {
   // Generate options up to current level
   const levelOptions = Array.from({ length: level }, (_, i) => i + 1);
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <div className="max-w-4xl mx-auto p-4 sm:p-6 space-y-6 sm:space-y-8 animate-in fade-in duration-500">
       <button onClick={onHome} className="flex items-center gap-1 text-sm font-semibold text-slate-500 hover:text-slate-800 mb-2 sm:mb-4 transition-colors">

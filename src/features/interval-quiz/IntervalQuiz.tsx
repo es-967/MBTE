@@ -16,6 +16,10 @@ export function IntervalQuiz({ isChallenge, targetLevel, onHome, onPlatformHome 
   const moduleProgress = progress['interval-practice'] || defaultProgress;
   const { bestChallengeScore } = moduleProgress;
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const {
     question, selectedQuality, selectedDegree,
     submitted, isCorrect, score, total, qnum,

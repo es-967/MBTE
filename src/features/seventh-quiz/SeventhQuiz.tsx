@@ -16,6 +16,10 @@ export function SeventhQuiz({ isChallenge, targetLevel, onHome, onPlatformHome }
   const moduleProgress = progress['seventh-practice'] || defaultProgress;
   const { bestChallengeScore } = moduleProgress;
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const {
     question, selectedRoot, selectedType,
     submitted, isCorrect, score, total, qnum,

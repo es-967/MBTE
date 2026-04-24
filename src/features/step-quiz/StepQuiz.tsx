@@ -20,6 +20,10 @@ export function StepQuiz({ isChallenge, targetLevel, mode = 'mixed', moduleName 
   const { question, score, combo, isWrong, isCorrect, generateNewQuestion, submitAnswer, reset } = useStepQuizStore();
   const { addExp, updateBestScore, incrementStreak, resetStreak } = useGameStore();
   
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+  
   const [timeLeft, setTimeLeft] = useState(60);
   const [gameOver, setGameOver] = useState(false);
 

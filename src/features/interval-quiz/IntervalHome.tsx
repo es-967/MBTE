@@ -16,6 +16,10 @@ export function IntervalHome({ onStartQuiz, onHome }: IntervalHomeProps) {
   const moduleProgress = progress['interval-practice'] || defaultProgress;
   const { level } = moduleProgress;
   
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+  
   const [practiceLevel, setPracticeLevel] = useState<number>(level);
   const [challengeLevel, setChallengeLevel] = useState<number>(level);
   const [practiceMode, setPracticeMode] = useState<IntervalQuizMode>('note-interval');

@@ -107,6 +107,10 @@ export function FretboardStepQuiz({ isChallenge, targetLevel, onHome, onPlatform
   const moduleProgress = progress['fretboard-step'] || defaultProgress;
   const globalLevel = moduleProgress.level;
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const [currentDifficulty, setCurrentDifficulty] = useState(targetLevel);
   const [question, setQuestion] = useState<Question>(generateQuestion(currentDifficulty));
   const [score, setScore] = useState(0);

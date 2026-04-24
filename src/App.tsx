@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { PlatformHome } from './components/platform/PlatformHome';
 import { TRAINING_MODULES } from './modules/index';
 import { TrainingModule } from './types/TrainingModule';
@@ -13,6 +13,10 @@ import { Wrench } from 'lucide-react';
 export default function App() {
   const [activeModule, setActiveModule] = useState<TrainingModule | null>(null);
   const [isToolOpen, setIsToolOpen] = useState(false);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [activeModule]);
 
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900 font-sans relative">

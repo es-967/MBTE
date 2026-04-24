@@ -106,7 +106,7 @@ export function MajorScaleHome({ onStartQuiz, onHome }: MajorScaleHomeProps) {
         <h2 className="text-2xl sm:text-4xl font-display font-black text-slate-900 tracking-tight">大調音階練習</h2>
         <p className="text-slate-500 font-medium text-xs sm:text-base px-2">依序完成各個形狀的連勝試煉，解鎖下一階段</p>
       </div>
-      
+
       <ModuleStats 
         progress={moduleProgress} 
         bestScoreLabel="近期正確率" 

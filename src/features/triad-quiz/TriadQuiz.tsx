@@ -16,6 +16,10 @@ export function TriadQuiz({ isChallenge, targetLevel, onHome, onPlatformHome }: 
   const moduleProgress = progress['triad-practice'] || defaultProgress;
   const { bestChallengeScore } = moduleProgress;
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const {
     question, selectedRoot, selectedType,
     submitted, isCorrect, score, total, qnum,

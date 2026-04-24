@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardTitle } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { useGameStore, defaultProgress } from '../../store/useGameStore';
@@ -13,6 +13,10 @@ export function FretboardStepHome({ onStartQuiz, onHome }: FretboardStepHomeProp
   const { progress } = useGameStore();
   const moduleProgress = progress['fretboard-step'] || defaultProgress;
   const level = moduleProgress.level;
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const [practiceLevel, setPracticeLevel] = useState<number>(Math.max(1, Math.min(5, level)));
   const [challengeLevel, setChallengeLevel] = useState<number>(Math.max(1, Math.min(5, level)));
@@ -38,7 +42,7 @@ export function FretboardStepHome({ onStartQuiz, onHome }: FretboardStepHomeProp
         <h2 className="text-4xl font-display font-black text-slate-900 tracking-tight">指板全半音練習</h2>
         <p className="text-slate-500 font-medium">提升你在吉他指板上的視覺距離感與全半音判斷能力</p>
       </div>
-      
+
       <ModuleStats 
         progress={moduleProgress} 
         bestScoreLabel="近期正確率" 

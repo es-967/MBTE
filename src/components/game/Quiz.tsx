@@ -16,6 +16,10 @@ export function Quiz({ isChallenge, difficulty, onHome, onPlatformHome }: QuizPr
   const moduleProgress = progress['scale-practice'] || defaultProgress;
   const { level, streak, bestChallengeScore } = moduleProgress;
   
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+  
   const [question, setQuestion] = useState<Question | null>(null);
   const [selectedNotes, setSelectedNotes] = useState<string[]>([]);
   const [showResult, setShowResult] = useState(false);

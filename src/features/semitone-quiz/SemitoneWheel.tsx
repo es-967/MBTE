@@ -199,18 +199,7 @@ export function SemitoneWheel() {
           </div>
         </div>
 
-        <div className="flex flex-wrap justify-center items-center gap-1.5 sm:gap-2">
-          <span className="text-slate-500 text-[10px] sm:text-xs mr-1">吉他空弦快速鍵:</span>
-          {GUITAR_STRINGS.map((str, idx) => (
-            <button 
-              key={`${str.name}-${idx}`}
-              className="px-2 py-1 rounded-md bg-slate-800 border border-slate-700 text-slate-300 text-[10px] sm:text-xs hover:bg-slate-700 hover:text-white transition-colors"
-              onClick={() => navigateToNote(str.noteIndex, `這是吉他第 ${str.stringNum} 弦空弦音`)}
-            >
-              {str.name}
-            </button>
-          ))}
-        </div>
+
       </div>
 
       <div className="relative min-h-[260px] sm:min-h-[300px] flex flex-col items-center justify-center overflow-hidden">

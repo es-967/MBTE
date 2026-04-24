@@ -15,6 +15,10 @@ export function StepHome({ onStartQuiz, onHome }: Props) {
   const moduleProgress = progress['step-practice'] || defaultProgress;
   const { level } = moduleProgress;
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const [practiceLevel, setPracticeLevel] = useState<number>(level);
   const [challengeLevel, setChallengeLevel] = useState<number>(level);
   const [practiceMode, setPracticeMode] = useState<StepQuizMode>('semitones');

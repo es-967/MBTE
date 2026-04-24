@@ -154,6 +154,9 @@ export function SeventhQuiz({ isChallenge, targetLevel, onHome, onPlatformHome }
         useGameStore.getState().addExp('seventh-practice', 25); // Slightly more exp for 7th chords
         useGameStore.getState().incrementStreak('seventh-practice');
       }
+      setTimeout(() => {
+        nextQuestion(targetLevel);
+      }, 800);
     } else {
       if (!isChallenge) {
         useGameStore.getState().resetStreak('seventh-practice');
@@ -260,7 +263,7 @@ export function SeventhQuiz({ isChallenge, targetLevel, onHome, onPlatformHome }
           >
             確認答案
           </Button>
-        ) : (
+        ) : !isCorrect ? (
           <Button
             size="lg"
             className="flex-[2] text-base sm:text-lg h-11 sm:h-12"
@@ -268,6 +271,8 @@ export function SeventhQuiz({ isChallenge, targetLevel, onHome, onPlatformHome }
           >
             下一題 →
           </Button>
+        ) : (
+          <div className="flex-[2]" />
         )}
         <Button
           size="lg"

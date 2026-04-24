@@ -100,10 +100,10 @@ export function Quiz({ isChallenge, difficulty, onHome, onPlatformHome }: QuizPr
       } else {
         addExp('scale-practice', 20);
         incrementStreak('scale-practice');
-        if (streak + 1 >= 3) {
-          // Confetti removed
-        }
       }
+      setTimeout(() => {
+        loadNewQuestion();
+      }, 800);
     } else {
       if (!isChallenge) {
         resetStreak('scale-practice');
@@ -214,9 +214,11 @@ export function Quiz({ isChallenge, difficulty, onHome, onPlatformHome }: QuizPr
                 )}
               </div>
               <div className="flex flex-col sm:flex-row justify-center gap-2 sm:gap-4">
-                <Button size="lg" onClick={loadNewQuestion} className="w-full sm:w-48 order-1 sm:order-none h-12">
-                  🎯 下一題
-                </Button>
+                {!isCorrect && (
+                  <Button size="lg" onClick={loadNewQuestion} className="w-full sm:w-48 order-1 sm:order-none h-12">
+                    🎯 下一題
+                  </Button>
+                )}
                 <div className="flex gap-2 w-full sm:w-auto order-2 sm:order-none">
                   <Button size="lg" variant="outline" onClick={onHome} className="flex-1 sm:w-auto h-12">
                     🏠 設定

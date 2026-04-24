@@ -201,6 +201,9 @@ export function MajorScaleQuiz({ mode, targetShape, onHome }: MajorScaleQuizProp
         setLevel('fretboard-major-scale', newLevel);
       }
       
+      setTimeout(() => {
+        loadNewQuestion();
+      }, 1000);
     } else {
       setCombo(0);
       resetStreak('fretboard-major-scale');
@@ -414,7 +417,7 @@ export function MajorScaleQuiz({ mode, targetShape, onHome }: MajorScaleQuizProp
               送出答案
             </Button>
           )}
-          {quizState === 'result' && (
+          {quizState === 'result' && (resultStats.wrong !== 0 || resultStats.missed !== 0) && (
             <Button size="lg" className="w-full sm:w-48 text-lg h-12 sm:h-14 font-bold" onClick={loadNewQuestion}>
               下一題
             </Button>

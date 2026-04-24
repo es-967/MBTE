@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useStepQuizStore } from './stepQuizStore';
 import { useGameStore } from '../../store/useGameStore';
@@ -27,9 +27,14 @@ export function StepQuiz({ isChallenge, targetLevel, mode = 'mixed', moduleName 
   const [timeLeft, setTimeLeft] = useState(60);
   const [gameOver, setGameOver] = useState(false);
 
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+
   useEffect(() => {
     reset();
     generateNewQuestion(targetLevel, mode);
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
   }, [targetLevel, mode]);
 
   useEffect(() => {
@@ -50,8 +55,20 @@ export function StepQuiz({ isChallenge, targetLevel, mode = 'mixed', moduleName 
     return () => clearInterval(timer);
   }, [isChallenge, gameOver, score]);
 
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [isCooldown, setIsCooldown] = useState(false);
+
+  useEffect(() => {
+    if (question) {
+      setIsCooldown(true);
+      const t = setTimeout(() => setIsCooldown(false), 400);
+      return () => clearTimeout(t);
+    }
+  }, [question]);
+
   const handleAnswer = (answer: string) => {
-    if (gameOver) return;
+    if (gameOver || isProcessing || isCorrect || isWrong || isCooldown) return;
+    setIsProcessing(true);
     
     const correct = submitAnswer(answer);
     
@@ -60,12 +77,20 @@ export function StepQuiz({ isChallenge, targetLevel, mode = 'mixed', moduleName 
         addExp(moduleName, 10 + Math.floor(combo / 3) * 5);
         incrementStreak(moduleName);
       }
-      setTimeout(() => generateNewQuestion(targetLevel, mode), 500);
+      if (timerRef.current) clearTimeout(timerRef.current);
+      timerRef.current = setTimeout(() => {
+        generateNewQuestion(targetLevel, mode);
+        setIsProcessing(false);
+      }, 500);
     } else {
       if (!isChallenge) {
         resetStreak(moduleName);
       }
-      setTimeout(() => generateNewQuestion(targetLevel, mode), 1500);
+      if (timerRef.current) clearTimeout(timerRef.current);
+      timerRef.current = setTimeout(() => {
+        generateNewQuestion(targetLevel, mode);
+        setIsProcessing(false);
+      }, 1500);
     }
   };
 

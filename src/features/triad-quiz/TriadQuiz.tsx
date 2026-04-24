@@ -151,6 +151,9 @@ export function TriadQuiz({ isChallenge, targetLevel, onHome, onPlatformHome }: 
         useGameStore.getState().addExp('triad-practice', 20);
         useGameStore.getState().incrementStreak('triad-practice');
       }
+      setTimeout(() => {
+        nextQuestion(targetLevel);
+      }, 800);
     } else {
       if (!isChallenge) {
         useGameStore.getState().resetStreak('triad-practice');
@@ -256,7 +259,7 @@ export function TriadQuiz({ isChallenge, targetLevel, onHome, onPlatformHome }: 
           >
             確認答案
           </Button>
-        ) : (
+        ) : !isCorrect ? (
           <Button
             size="lg"
             className="flex-[2] text-base sm:text-lg h-11 sm:h-12"
@@ -264,6 +267,8 @@ export function TriadQuiz({ isChallenge, targetLevel, onHome, onPlatformHome }: 
           >
             下一題 →
           </Button>
+        ) : (
+          <div className="flex-[2]" />
         )}
         <Button
           size="lg"

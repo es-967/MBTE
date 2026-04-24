@@ -20,6 +20,45 @@ export function PlatformHome({ modules, onSelectModule }: PlatformHomeProps) {
   const { progress } = useGameStore();
   const [showResetConfirm, setShowResetConfirm] = React.useState(false);
 
+  const theoryModules = modules.filter(m => m.category === 'theory');
+  const fretboardModules = modules.filter(m => m.category === 'fretboard');
+
+  const renderModuleCard = (module: TrainingModule) => {
+    const moduleProgress = progress[module.id] || defaultProgress;
+    const isLocked = false;
+    const diff = difficultyLabel[module.difficulty];
+    return (
+      <button
+        key={module.id}
+        onClick={() => !isLocked && onSelectModule(module)}
+        disabled={isLocked}
+        className={`text-left w-full rounded-2xl border-2 p-6 transition-all duration-200 space-y-4
+          ${isLocked
+            ? 'border-slate-200 bg-slate-50 opacity-60 cursor-not-allowed'
+            : 'border-slate-200/60 bg-white hover:border-indigo-300 hover:shadow-md cursor-pointer active:scale-[0.98]'
+          }`}
+      >
+        <div className="flex items-start justify-between">
+          <div className="flex items-center gap-4">
+            <span className="text-4xl">{isLocked ? '🔒' : module.icon}</span>
+            <div>
+              <h3 className="font-display font-bold text-slate-900 text-xl leading-tight">{module.title}</h3>
+              {isLocked && <p className="text-xs text-slate-400 mt-1">Lv{module.unlockLevel} 解鎖</p>}
+            </div>
+          </div>
+          <span className={`text-xs font-bold px-3 py-1 rounded-full ${diff.color}`}>{diff.text}</span>
+        </div>
+        <p className="text-sm text-slate-600 leading-relaxed font-medium">{module.description}</p>
+        <div className="flex justify-between items-center mt-4 pt-4 border-t border-slate-100">
+          <div className="text-sm text-indigo-600 font-bold bg-indigo-50 px-3 py-1 rounded-full">Lv {moduleProgress.level}</div>
+          <div className="text-sm text-slate-500 font-medium flex items-center gap-1">
+            <span>⏱</span> 約 {module.estimatedMinutes} 分鐘
+          </div>
+        </div>
+      </button>
+    );
+  };
+
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-12 animate-in fade-in duration-500">
 
@@ -37,44 +76,25 @@ export function PlatformHome({ modules, onSelectModule }: PlatformHomeProps) {
 
       <div className="space-y-6">
         <h2 className="text-2xl font-display font-bold text-slate-800 flex items-center gap-2">
-          <span>📚</span> 練習項目
+          <span>🧠</span> 樂理思維
         </h2>
         <div className="grid md:grid-cols-2 gap-5">
-          {modules.map((module) => {
-            const moduleProgress = progress[module.id] || defaultProgress;
-            const isLocked = false;
-            const diff = difficultyLabel[module.difficulty];
-            return (
-              <button
-                key={module.id}
-                onClick={() => !isLocked && onSelectModule(module)}
-                disabled={isLocked}
-                className={`text-left w-full rounded-2xl border-2 p-6 transition-all duration-200 space-y-4
-                  ${isLocked
-                    ? 'border-slate-200 bg-slate-50 opacity-60 cursor-not-allowed'
-                    : 'border-slate-200/60 bg-white hover:border-indigo-300 hover:shadow-md cursor-pointer active:scale-[0.98]'
-                  }`}
-              >
-                <div className="flex items-start justify-between">
-                  <div className="flex items-center gap-4">
-                    <span className="text-4xl">{isLocked ? '🔒' : module.icon}</span>
-                    <div>
-                      <h3 className="font-display font-bold text-slate-900 text-xl leading-tight">{module.title}</h3>
-                      {isLocked && <p className="text-xs text-slate-400 mt-1">Lv{module.unlockLevel} 解鎖</p>}
-                    </div>
-                  </div>
-                  <span className={`text-xs font-bold px-3 py-1 rounded-full ${diff.color}`}>{diff.text}</span>
-                </div>
-                <p className="text-sm text-slate-600 leading-relaxed font-medium">{module.description}</p>
-                <div className="flex justify-between items-center mt-4 pt-4 border-t border-slate-100">
-                  <div className="text-sm text-indigo-600 font-bold bg-indigo-50 px-3 py-1 rounded-full">Lv {moduleProgress.level}</div>
-                  <div className="text-sm text-slate-500 font-medium flex items-center gap-1">
-                    <span>⏱</span> 約 {module.estimatedMinutes} 分鐘
-                  </div>
-                </div>
-              </button>
-            );
-          })}
+          {theoryModules.map(renderModuleCard)}
+        </div>
+      </div>
+
+      <div className="space-y-6">
+        <h2 className="text-2xl font-display font-bold text-slate-800 flex items-center gap-2">
+          <span>🎸</span> 指板地圖
+        </h2>
+        <div className="grid md:grid-cols-2 gap-5">
+          {fretboardModules.length > 0 ? (
+            fretboardModules.map(renderModuleCard)
+          ) : (
+            <div className="md:col-span-2 p-8 text-center border-2 border-dashed border-slate-200 rounded-2xl bg-white/50 text-slate-400 font-medium">
+              指板視覺記憶和空間推理訓練，即將推出！
+            </div>
+          )}
         </div>
       </div>
 

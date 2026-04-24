@@ -8,6 +8,7 @@ export interface ModuleProgress {
   streak: number;
   bestChallengeScore: number;
   unlocked: boolean;
+  customMetadata?: Record<string, any>;
 }
 
 export const defaultProgress: ModuleProgress = {
@@ -24,10 +25,12 @@ interface GameState {
   gender: 'M' | 'F' | null;
   
   addExp: (moduleId: string, amount: number) => void;
+  setLevel: (moduleId: string, level: number) => void;
   incrementStreak: (moduleId: string) => void;
   resetStreak: (moduleId: string) => void;
   updateBestScore: (moduleId: string, score: number) => void;
   unlockModule: (moduleId: string) => void;
+  updateCustomMetadata: (moduleId: string, data: Partial<Record<string, any>>) => void;
   setPracticeMode: (mode: PracticeMode) => void;
   setGender: (gender: 'M' | 'F') => void;
   resetProgress: () => void;
@@ -43,6 +46,16 @@ export const useGameStore = create<GameState>()(
       addExp: (moduleId, amount) => set((state) => {
         const current = state.progress[moduleId] || { ...defaultProgress };
         const newExp = current.exp + amount;
+        
+        if (current.customMetadata?.manualLeveling) {
+          return {
+            progress: {
+              ...state.progress,
+              [moduleId]: { ...current, exp: newExp }
+            }
+          };
+        }
+
         let newLevel = 1;
         let expNeeded = 0;
         while (newExp >= expNeeded + newLevel * 100) {
@@ -53,6 +66,15 @@ export const useGameStore = create<GameState>()(
           progress: {
             ...state.progress,
             [moduleId]: { ...current, exp: newExp, level: newLevel }
+          }
+        };
+      }),
+      setLevel: (moduleId, level) => set((state) => {
+        const current = state.progress[moduleId] || { ...defaultProgress };
+        return {
+          progress: {
+            ...state.progress,
+            [moduleId]: { ...current, level }
           }
         };
       }),
@@ -89,6 +111,18 @@ export const useGameStore = create<GameState>()(
           progress: {
             ...state.progress,
             [moduleId]: { ...current, unlocked: true }
+          }
+        };
+      }),
+      updateCustomMetadata: (moduleId, data) => set((state) => {
+        const current = state.progress[moduleId] || { ...defaultProgress };
+        return {
+          progress: {
+            ...state.progress,
+            [moduleId]: { 
+              ...current, 
+              customMetadata: { ...(current.customMetadata || {}), ...data }
+            }
           }
         };
       }),

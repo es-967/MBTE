@@ -7,6 +7,7 @@ export interface TrainingModule {
   icon: string;
   unlockLevel: number;
   difficulty: 'beginner' | 'intermediate' | 'advanced';
+  category: 'theory' | 'fretboard';
   estimatedMinutes: number;
   component: ComponentType<ModuleProps>;
 }

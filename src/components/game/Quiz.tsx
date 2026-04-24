@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import confetti from 'canvas-confetti';
 import { useGameStore, defaultProgress } from '../../store/useGameStore';
 import { generateQuestion, Question } from '../../lib/music/generator';
 import { Button } from '../ui/Button';
@@ -29,12 +28,7 @@ export function Quiz({ isChallenge, difficulty, onHome, onPlatformHome }: QuizPr
   const prevLevelRef = React.useRef(level);
   useEffect(() => {
     if (level > prevLevelRef.current) {
-      confetti({
-        particleCount: 150,
-        spread: 80,
-        origin: { y: 0.5 },
-        colors: ['#6366f1', '#10b981', '#f59e0b', '#ec4899', '#8b5cf6']
-      });
+      // Confetti removed
     }
     prevLevelRef.current = level;
   }, [level]);
@@ -58,7 +52,7 @@ export function Quiz({ isChallenge, difficulty, onHome, onPlatformHome }: QuizPr
             const finalScore = challengeScoreRef.current;
             updateBestScore('scale-practice', finalScore);
             if (finalScore > bestChallengeScore) {
-              confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+              // Confetti removed
             }
             return 0;
           }
@@ -103,7 +97,7 @@ export function Quiz({ isChallenge, difficulty, onHome, onPlatformHome }: QuizPr
         addExp('scale-practice', 20);
         incrementStreak('scale-practice');
         if (streak + 1 >= 3) {
-          confetti({ particleCount: 50, spread: 60, origin: { y: 0.8 } });
+          // Confetti removed
         }
       }
     } else {

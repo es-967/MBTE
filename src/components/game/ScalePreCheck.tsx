@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { useGameStore } from '../../store/useGameStore';
-import confetti from 'canvas-confetti';
 
 export function ScalePreCheck({ onHome }: { onHome: () => void }) {
   const unlockModule = useGameStore(s => s.unlockModule);
@@ -17,7 +16,6 @@ export function ScalePreCheck({ onHome }: { onHome: () => void }) {
 
   const handleSelect = (correct: boolean) => {
     if (correct) {
-      confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
       unlockModule('scale-practice');
     } else {
       setError(true);

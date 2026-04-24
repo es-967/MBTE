@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useRef } from 'react'
-import confetti from 'canvas-confetti'
 import { useTriadQuizStore } from './triadQuizStore'
 import type { ChordKey } from './triadQuiz.types'
 import { useGameStore, defaultProgress } from '../../store/useGameStore'
@@ -31,12 +30,7 @@ export function TriadQuiz({ isChallenge, targetLevel, onHome, onPlatformHome }: 
   const prevLevelRef = useRef(moduleProgress.level);
   useEffect(() => {
     if (moduleProgress.level > prevLevelRef.current) {
-      confetti({
-        particleCount: 150,
-        spread: 80,
-        origin: { y: 0.5 },
-        colors: ['#6366f1', '#10b981', '#f59e0b', '#ec4899', '#8b5cf6']
-      });
+      // Confetti removed
     }
     prevLevelRef.current = moduleProgress.level;
   }, [moduleProgress.level]);
@@ -55,7 +49,7 @@ export function TriadQuiz({ isChallenge, targetLevel, onHome, onPlatformHome }: 
             const finalScore = challengeScoreRef.current;
             useGameStore.getState().updateBestScore('triad-practice', finalScore);
             if (finalScore > bestChallengeScore) {
-              confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+              // Confetti removed
             }
             return 0;
           }

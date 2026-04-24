@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { useGameStore } from '../../store/useGameStore';
-import confetti from 'canvas-confetti';
 
 const QUESTIONS = [
   {
@@ -33,7 +32,6 @@ export function IntervalPreCheck({ onHome }: { onHome: () => void }) {
   const handleSelect = (correct: boolean) => {
     if (correct) {
       if (step === QUESTIONS.length - 1) {
-        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
         unlockModule('interval-practice');
       } else {
         setStep(s => s + 1);

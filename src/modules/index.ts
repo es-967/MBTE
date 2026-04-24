@@ -4,6 +4,8 @@ import { TriadModule } from './TriadModule';
 import { IntervalModule } from './IntervalModule';
 import { StepModule } from './StepModule';
 import { SeventhModule } from './SeventhModule';
+import { FretboardStepModule } from './FretboardStepModule';
+import { FretboardMajorScaleModule } from './FretboardMajorScaleModule';
 
 export const TRAINING_MODULES: TrainingModule[] = [
   {
@@ -13,6 +15,7 @@ export const TRAINING_MODULES: TrainingModule[] = [
     icon: '🎼',
     unlockLevel: 0,
     difficulty: 'beginner',
+    category: 'theory',
     estimatedMinutes: 5,
     component: ScaleModule,
   },
@@ -23,6 +26,7 @@ export const TRAINING_MODULES: TrainingModule[] = [
     icon: '🎹',
     unlockLevel: 0,
     difficulty: 'beginner',
+    category: 'theory',
     estimatedMinutes: 5,
     component: StepModule,
   },
@@ -33,6 +37,7 @@ export const TRAINING_MODULES: TrainingModule[] = [
     icon: '📏',
     unlockLevel: 0,
     difficulty: 'beginner',
+    category: 'theory',
     estimatedMinutes: 5,
     component: IntervalModule,
   },
@@ -43,6 +48,7 @@ export const TRAINING_MODULES: TrainingModule[] = [
     icon: '🎸',
     unlockLevel: 0,
     difficulty: 'intermediate',
+    category: 'theory',
     estimatedMinutes: 5,
     component: TriadModule,
   },
@@ -53,7 +59,30 @@ export const TRAINING_MODULES: TrainingModule[] = [
     icon: '🎷',
     unlockLevel: 0,
     difficulty: 'advanced',
+    category: 'theory',
     estimatedMinutes: 7,
     component: SeventhModule,
+  },
+  {
+    id: 'fretboard-step',
+    title: '指板全半音練習',
+    description: '在吉他指板上隨機挑選兩個音，挑戰判斷它們之間的距離是全音或半音',
+    icon: '🎸',
+    unlockLevel: 0,
+    difficulty: 'beginner',
+    category: 'fretboard',
+    estimatedMinutes: 5,
+    component: FretboardStepModule,
+  },
+  {
+    id: 'fretboard-major-scale',
+    title: '大調音階練習',
+    description: 'CAGED 形狀記憶與推算，征服指板大調音階地圖',
+    icon: '🗺️',
+    unlockLevel: 0,
+    difficulty: 'intermediate',
+    category: 'fretboard',
+    estimatedMinutes: 5,
+    component: FretboardMajorScaleModule,
   },
 ];

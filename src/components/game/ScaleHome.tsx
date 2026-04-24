@@ -40,7 +40,7 @@ export function ScaleHome({ onStartQuiz, onHome }: ScaleHomeProps) {
         <Card>
           <CardHeader>
             <CardTitle className="text-2xl font-display flex items-center gap-2 text-slate-800">
-              <span>📚</span> 練習模式
+              <span>🚀</span> 闖關模式
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-5">
@@ -59,7 +59,7 @@ export function ScaleHome({ onStartQuiz, onHome }: ScaleHomeProps) {
               {level < 6 && <p className="text-xs font-medium text-slate-500">小調與混答模式將於 Lv6 解鎖</p>}
             </div>
             <Button className="w-full text-lg" size="lg" onClick={() => onStartQuiz(false)}>
-              🎯 開始練習
+              🚀 開始闖關
             </Button>
           </CardContent>
         </Card>

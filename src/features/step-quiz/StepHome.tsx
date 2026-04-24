@@ -53,7 +53,7 @@ export function StepHome({ onStartQuiz, onHome }: Props) {
         <Card>
           <CardHeader>
             <CardTitle className="text-2xl font-display flex items-center gap-2 text-slate-800">
-              <span>📚</span> 練習模式
+              <span>🚀</span> 闖關模式
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-5">
@@ -82,7 +82,7 @@ export function StepHome({ onStartQuiz, onHome }: Props) {
               </select>
             </div>
             <Button className="w-full text-lg" size="lg" onClick={() => onStartQuiz(false, practiceLevel, practiceMode)}>
-              🎯 開始練習
+              🚀 開始闖關
             </Button>
           </CardContent>
         </Card>

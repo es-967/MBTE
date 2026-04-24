@@ -68,7 +68,7 @@ export function FretboardStepHome({ onStartQuiz, onHome }: FretboardStepHomeProp
         <Card className="border-2 border-indigo-100 shadow-sm hover:shadow-md transition-shadow">
           <div className="p-6 border-b border-slate-100 bg-indigo-50/50">
             <CardTitle className="text-2xl font-display flex items-center gap-2 text-slate-800">
-              <span className="text-3xl">🎯</span> 自由練習
+              <span className="text-3xl">🚀</span> 闖關模式
             </CardTitle>
           </div>
           <CardContent className="space-y-5 pt-6">
@@ -93,7 +93,7 @@ export function FretboardStepHome({ onStartQuiz, onHome }: FretboardStepHomeProp
             </p>
 
             <Button className="w-full text-lg mt-4 shadow-sm" size="lg" onClick={() => onStartQuiz(false, practiceLevel)}>
-              開始練習
+              開始闖關
             </Button>
           </CardContent>
         </Card>

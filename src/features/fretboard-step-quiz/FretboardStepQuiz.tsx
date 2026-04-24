@@ -123,6 +123,7 @@ export function FretboardStepQuiz({ isChallenge, targetLevel, onHome, onPlatform
   const [lastSelected, setLastSelected] = useState<boolean | null>(null);
 
   const prevLevelRef = useRef(globalLevel);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (globalLevel > prevLevelRef.current) {
@@ -132,6 +133,19 @@ export function FretboardStepQuiz({ isChallenge, targetLevel, onHome, onPlatform
     }
     prevLevelRef.current = globalLevel;
   }, [globalLevel, currentDifficulty]);
+
+  useEffect(() => {
+    if (scrollContainerRef.current && question) {
+      const minFret = Math.min(question.pos1.fret, question.pos2.fret);
+      const maxFret = Math.max(question.pos1.fret, question.pos2.fret);
+      const centerFret = (minFret + maxFret) / 2;
+      const scrollTarget = (centerFret / 13) * scrollContainerRef.current.scrollWidth - scrollContainerRef.current.clientWidth / 2;
+      scrollContainerRef.current.scrollTo({
+        left: scrollTarget,
+        behavior: 'smooth'
+      });
+    }
+  }, [question]);
 
   const loadNewQuestion = useCallback(() => {
     setQuestion(generateQuestion(currentDifficulty));
@@ -203,7 +217,7 @@ export function FretboardStepQuiz({ isChallenge, targetLevel, onHome, onPlatform
 
   const fretboardRenderer = useMemo(() => {
     return (
-      <div className="relative w-full overflow-x-auto select-none rounded-xl bg-slate-800 p-1.5 sm:p-4 border-2 sm:border-4 border-slate-900 shadow-xl my-4 sm:my-6">
+      <div ref={scrollContainerRef} className="relative w-full overflow-x-auto select-none rounded-xl bg-slate-800 p-1.5 sm:p-4 border-2 sm:border-4 border-slate-900 shadow-xl my-4 sm:my-6">
         <div className="min-w-[450px] sm:min-w-[500px] flex text-white relative">
           <div className="absolute top-0 left-8 flex w-[calc(100%-2rem)] h-6 z-10">
             {Array.from({ length: 13 }).map((_, f) => (

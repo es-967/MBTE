@@ -41,10 +41,9 @@ type ViewMode = 'scale' | 'triad' | 'seventh' | 'diatonic';
 const ROMAN_NUMERALS = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII'];
 const DIATONIC_QUALITY_SUFFIXES = ['maj', 'm', 'm', 'maj', 'maj', 'm', 'dim'];
 
-// Standard keys for scales (prefer flats, only F# as sharp)
-const SCALE_KEYS = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'F#', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'];
-// Additional keys for chords to avoid double sharps/flats (e.g. C# dim7)
-const CHORD_KEYS = ['C', 'C#', 'Db', 'D', 'D#', 'Eb', 'E', 'F', 'F#', 'Gb', 'G', 'G#', 'Ab', 'A', 'A#', 'Bb', 'B'];
+// Pitch arrays mapped to indexes 0-11
+const FLAT_KEYS = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'];
+const SHARP_KEYS = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 
 function parseNote(noteStr: string) {
   const letter = noteStr[0].toUpperCase();
@@ -135,17 +134,24 @@ export function DegreeTool() {
     return currPitch - 1 > prevPitch;
   };
 
+  const changeKey = (delta: number) => {
+    const currentPitch = parsedRoot.pitch;
+    const targetPitch = (currentPitch + delta + 12) % 12;
+    
+    if (viewMode === 'scale' || viewMode === 'diatonic') {
+      setKeyStr(FLAT_KEYS[targetPitch]);
+    } else {
+      if (delta > 0) {
+        setKeyStr(SHARP_KEYS[targetPitch]);
+      } else {
+        setKeyStr(FLAT_KEYS[targetPitch]);
+      }
+    }
+  };
+
   const changeAlt = (index: number, delta: number) => {
     if (viewMode === 'diatonic') {
-      const currentKeys = SCALE_KEYS; // Use SCALE_KEYS since it's "in scale mode"
-      const currentIndex = currentKeys.indexOf(keyStr);
-      if (currentIndex === -1) {
-        // Handle case where we were in chord keys and switched to diatonic
-        setKeyStr('C');
-      } else {
-        const nextIndex = (currentIndex + delta + currentKeys.length) % currentKeys.length;
-        setKeyStr(currentKeys[nextIndex]);
-      }
+      changeKey(delta);
       return;
     }
     if (index === 0) return;
@@ -190,35 +196,14 @@ export function DegreeTool() {
      };
   });
 
-  const currentKeys = viewMode === 'scale' || viewMode === 'diatonic' ? SCALE_KEYS : CHORD_KEYS;
-
   return (
     <div className="flex flex-col items-center w-full min-h-[400px] bg-white rounded-3xl p-6 overflow-hidden">
       <div className="text-center space-y-2 mb-6">
         <h2 className="text-2xl font-black text-slate-800 tracking-wider">級數對照儀</h2>
-        <p className="text-slate-500 text-sm">設定調性，並上下微調各級音與對應音名。</p>
+        <p className="text-slate-500 text-sm">上下微調根音與各級音，學習音階與和弦的對應關係。</p>
       </div>
 
-      <div className="flex flex-col items-center w-full max-w-xs space-y-4 mb-2 bg-slate-50 p-4 rounded-2xl border border-slate-200 shadow-sm text-center">
-        <div className="flex flex-col w-full gap-1">
-          <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">
-            {viewMode === 'triad' || viewMode === 'seventh' ? 'Root' : 'Key (Offset)'}
-          </label>
-          <select 
-            value={keyStr}
-            onChange={(e) => {
-              setKeyStr(e.target.value);
-              // Reset alterations when key changes
-              setAlterations([0, 0, 0, 0, 0, 0, 0]);
-            }}
-            className="w-full text-center text-2xl font-bold bg-transparent focus:outline-none cursor-pointer"
-          >
-            {currentKeys.map(k => (
-              <option key={k} value={k}>{k}</option>
-            ))}
-          </select>
-        </div>
-
+      <div className="flex w-full max-w-xs mb-6 bg-slate-50 p-2 rounded-2xl border border-slate-200 shadow-sm text-center">
         <div className="flex w-full bg-slate-200 p-1 rounded-xl">
           <button
             onClick={() => setViewMode('scale')}
@@ -333,9 +318,9 @@ export function DegreeTool() {
              {/* Note Section */}
              <div className="flex flex-col items-center w-full">
                <button 
-                 onClick={() => changeAlt(col.index, 1)}
-                 disabled={!col.canInc || col.isRoot}
-                 className={`p-1 rounded-lg transition-all ${col.isRoot ? 'opacity-0' : col.canInc ? 'text-emerald-400 hover:bg-emerald-100 hover:text-emerald-700 active:scale-90' : 'text-slate-200 cursor-not-allowed'}`}
+                 onClick={() => col.isRoot ? changeKey(1) : changeAlt(col.index, 1)}
+                 disabled={col.isRoot ? false : !col.canInc}
+                 className={`p-1 rounded-lg transition-all ${col.isRoot || col.canInc ? 'text-emerald-400 hover:bg-emerald-100 hover:text-emerald-700 active:scale-90' : 'text-slate-200 cursor-not-allowed'}`}
                >
                  <ChevronUp size={24} />
                </button>
@@ -352,9 +337,9 @@ export function DegreeTool() {
                </div>
                
                <button 
-                 onClick={() => changeAlt(col.index, -1)}
-                 disabled={!col.canDec || col.isRoot}
-                 className={`p-1 rounded-lg transition-all ${col.isRoot ? 'opacity-0' : col.canDec ? 'text-emerald-400 hover:bg-emerald-100 hover:text-emerald-700 active:scale-90' : 'text-slate-200 cursor-not-allowed'}`}
+                 onClick={() => col.isRoot ? changeKey(-1) : changeAlt(col.index, -1)}
+                 disabled={col.isRoot ? false : !col.canDec}
+                 className={`p-1 rounded-lg transition-all ${col.isRoot || col.canDec ? 'text-emerald-400 hover:bg-emerald-100 hover:text-emerald-700 active:scale-90' : 'text-slate-200 cursor-not-allowed'}`}
                >
                  <ChevronDown size={24} />
                </button>

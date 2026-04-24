@@ -81,6 +81,22 @@ export function MajorScaleQuiz({ mode, targetShape, onHome }: MajorScaleQuizProp
   const [resultStats, setResultStats] = useState({ correct: 0, wrong: 0, missed: 0 });
 
   const prevLevelRef = useRef(globalLevel);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (question) {
+      setTimeout(() => {
+        if (scrollContainerRef.current) {
+          const centerFret = question.rootFret;
+          const scrollTarget = (centerFret / 16) * scrollContainerRef.current.scrollWidth - scrollContainerRef.current.clientWidth / 2;
+          scrollContainerRef.current.scrollTo({
+            left: scrollTarget,
+            behavior: 'smooth'
+          });
+        }
+      }, 50);
+    }
+  }, [question]);
 
   useEffect(() => {
     // Set manualLeveling to true initially
@@ -202,7 +218,7 @@ export function MajorScaleQuiz({ mode, targetShape, onHome }: MajorScaleQuizProp
 
   const renderFretboard = () => {
     return (
-      <div className="relative w-full overflow-x-auto select-none rounded-xl bg-slate-800 p-1.5 sm:p-4 border-2 sm:border-4 border-slate-900 shadow-xl my-4 sm:my-6">
+      <div ref={scrollContainerRef} className="relative w-full overflow-x-auto select-none rounded-xl bg-slate-800 p-1.5 sm:p-4 border-2 sm:border-4 border-slate-900 shadow-xl my-4 sm:my-6">
         {quizState === 'memorizing' && countdown > 0 && (
           <div className="absolute inset-0 z-50 flex items-center justify-center bg-slate-900/40 pointer-events-none rounded-lg">
             <motion.div 

@@ -37,7 +37,7 @@ interface Question {
 }
 
 const generateQuestion = (mode: MajorScaleMode, selectedShape?: CagedShape): Question => {
-  const shapeId = mode === 'random' ? CAGED_LIST[Math.floor(Math.random() * CAGED_LIST.length)] : (selectedShape || 'E');
+  const shapeId = (mode === 'random' || mode === 'hell') ? CAGED_LIST[Math.floor(Math.random() * CAGED_LIST.length)] : (selectedShape || 'E');
   const shapeDef = SHAPES[shapeId];
   
   const minPossible = Math.max(1, 1 - shapeDef.win[0]);
@@ -175,7 +175,7 @@ export function MajorScaleQuiz({ mode, targetShape, onHome }: MajorScaleQuizProp
       incrementStreak('fretboard-major-scale');
       addExp('fretboard-major-scale', expEarned);
       
-      const key = mode === 'random' ? 'random' : `${mode}_${question.shapeId}`;
+      const key = (mode === 'random' || mode === 'hell') ? mode : `${mode}_${question.shapeId}`;
       const streaks = moduleProgress.customMetadata?.streaks || {};
       const cleared = moduleProgress.customMetadata?.cleared || {};
       
@@ -208,7 +208,7 @@ export function MajorScaleQuiz({ mode, targetShape, onHome }: MajorScaleQuizProp
       setCombo(0);
       resetStreak('fretboard-major-scale');
       
-      const key = mode === 'random' ? 'random' : `${mode}_${question.shapeId}`;
+      const key = (mode === 'random' || mode === 'hell') ? mode : `${mode}_${question.shapeId}`;
       const streaks = moduleProgress.customMetadata?.streaks || {};
       
       updateCustomMetadata('fretboard-major-scale', {
@@ -278,7 +278,7 @@ export function MajorScaleQuiz({ mode, targetShape, onHome }: MajorScaleQuizProp
                         dotClass = 'bg-amber-400 text-amber-900 ring-2 sm:ring-4 ring-white shadow-[0_0_15px_rgba(251,191,36,0.6)]';
                         content = '1';
                       } else if (isSelected) {
-                        if (mode === 'recall' && Array.from(selectedNodes).length === 1 && selectedNodes.has(key)) {
+                        if ((mode === 'recall' || mode === 'hell') && Array.from(selectedNodes).length === 1 && selectedNodes.has(key)) {
                           dotClass = 'bg-amber-100 text-amber-800 ring-2 sm:ring-4 ring-amber-300 shadow-sm';
                           content = '1';
                         } else {
@@ -360,7 +360,7 @@ export function MajorScaleQuiz({ mode, targetShape, onHome }: MajorScaleQuizProp
           </span>
         </span>
       );
-    } else if (mode === 'random') {
+    } else if (mode === 'random' || mode === 'hell') {
       return (
         <span>{rootName} 大調音階 <br className="sm:hidden" /> <span className="text-rose-500">({question.shapeId} Shape)</span></span>
       );
@@ -402,10 +402,11 @@ export function MajorScaleQuiz({ mode, targetShape, onHome }: MajorScaleQuizProp
           <h3 className="text-xl sm:text-2xl font-bold text-slate-800 mb-1 sm:mb-2">
             {getTitle()}
           </h3>
-          <p className="text-xs sm:text-slate-500 font-medium text-slate-400">
+          <p className="text-xs sm:text-slate-500 font-medium text-slate-400 mt-2">
             {quizState === 'memorizing' ? '請記住音階的位置...' : 
-             quizState === 'playing' ? '請點擊指板，填滿所有音階位置！' : 
-             resultStats.wrong === 0 && resultStats.missed === 0 ? '🎉 完美答對！' : '還有進步空間，看看漏了或按錯了哪裡'}
+             quizState === 'playing' ? 
+               (mode === 'hell' ? '請確實點出主音(1)與所有音階位置！' : '請點擊指板，填滿所有音階位置！') : 
+               (resultStats.wrong === 0 && resultStats.missed === 0 ? '🎉 完美答對！' : '還有進步空間，看看漏了或按錯了哪裡')}
           </p>
         </div>
 

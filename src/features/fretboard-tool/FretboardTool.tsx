@@ -130,11 +130,18 @@ interface Pos {
   fret: number;
 }
 
+type AbsoluteModeMode = 'explore' | 'octaveQuiz';
+
 export function FretboardTool() {
   const [mode, setMode] = useState<Mode>('chord');
   const [displayMode, setDisplayMode] = useState<DisplayMode>('degree');
   const [selectedPos, setSelectedPos] = useState<Pos[]>([]);
   const [chordType, setChordType] = useState<ChordType>('maj');
+
+  const [absoluteMode, setAbsoluteMode] = useState<AbsoluteModeMode>('explore');
+  const [show56Strings, setShow56Strings] = useState(false);
+  const [quizTargetPitch, setQuizTargetPitch] = useState<number | null>(null);
+  const [quizFoundPos, setQuizFoundPos] = useState<Pos[]>([]);
 
   useEffect(() => {
     if (mode === 'absolute') {
@@ -144,9 +151,34 @@ export function FretboardTool() {
     }
   }, [mode]);
 
+  useEffect(() => {
+    if (absoluteMode !== 'octaveQuiz') {
+      setQuizTargetPitch(null);
+      setQuizFoundPos([]);
+    }
+  }, [absoluteMode]);
+
   const handleFretClick = (stringIdx: number, fret: number) => {
     if (mode === 'absolute') {
-      setSelectedPos([{ stringIdx, fret }]);
+      if (absoluteMode === 'explore') {
+        setSelectedPos([{ stringIdx, fret }]);
+      } else if (absoluteMode === 'octaveQuiz') {
+        const pitchClass = (STRINGS[stringIdx] + fret) % 12;
+        if (quizTargetPitch === null) {
+          setQuizTargetPitch(pitchClass);
+          setQuizFoundPos([{ stringIdx, fret }]);
+        } else {
+          const isWon = quizFoundPos.length >= getTotalOctaves(quizTargetPitch);
+          if (isWon) {
+            setQuizTargetPitch(pitchClass);
+            setQuizFoundPos([{ stringIdx, fret }]);
+          } else if (pitchClass === quizTargetPitch) {
+            if (!quizFoundPos.some(p => p.stringIdx === stringIdx && p.fret === fret)) {
+              setQuizFoundPos(prev => [...prev, { stringIdx, fret }]);
+            }
+          }
+        }
+      }
     } else if (mode === 'interval') {
       setSelectedPos(prev => {
         if (prev.length === 2) return [{ stringIdx, fret }]; // Reset
@@ -213,21 +245,40 @@ export function FretboardTool() {
                 <div className="flex flex-1 relative z-20">
                   {Array.from({ length: FRETS + 1 }).map((_, f) => {
                     const pitch = openPitch + f;
-                    const isClicked = isSelected(sIdx, f);
-                    const isChordTarget = mode === 'chord' && chordPositions.some(p => p.stringIdx === sIdx && p.fret === f);
-                    const isRoot = mode === 'chord' && isClicked;
-                    
-                    // Absolute mode: highlight octaves
-                    const isOctaveHighlight = mode === 'absolute' && selectedPos.length === 1 && ((pitch % 12) === ((STRINGS[selectedPos[0].stringIdx] + selectedPos[0].fret) % 12));
+                    let isClicked = false;
+                    let isOctaveHighlight = false;
+                    let isShow56 = false;
+                    let isQuizFound = false;
 
-                    const rootPitchClass = mode === 'chord' && selectedPos.length > 0 ? (STRINGS[selectedPos[0].stringIdx] + selectedPos[0].fret) % 12 : -1;
-                    const isRootColor = mode === 'chord' && isChordTarget && ((pitch % 12) === rootPitchClass);
+                    if (mode === 'absolute') {
+                      if (absoluteMode === 'explore') {
+                        isClicked = isSelected(sIdx, f);
+                        isOctaveHighlight = selectedPos.length === 1 && ((pitch % 12) === ((STRINGS[selectedPos[0].stringIdx] + selectedPos[0].fret) % 12));
+                        isShow56 = show56Strings && (sIdx === 4 || sIdx === 5); // 5th, 6th strings
+                      } else if (absoluteMode === 'octaveQuiz') {
+                        isQuizFound = quizFoundPos.some(p => p.stringIdx === sIdx && p.fret === f);
+                        if (isQuizFound && quizFoundPos[0]?.stringIdx === sIdx && quizFoundPos[0]?.fret === f) {
+                          isClicked = true;
+                        }
+                      }
+                    } else {
+                      isClicked = isSelected(sIdx, f);
+                    }
+
+                    const isChordTarget = mode === 'chord' && chordPositions.some(p => p.stringIdx === sIdx && p.fret === f);
+                    const isRootColor = mode === 'chord' && isChordTarget && ((pitch % 12) === (selectedPos.length > 0 ? (STRINGS[selectedPos[0].stringIdx] + selectedPos[0].fret) % 12 : -1));
 
                     let dotClass = 'opacity-0 scale-50 group-hover:opacity-30 group-hover:scale-75';
                     if (isClicked && !(mode === 'chord' && !isChordTarget)) {
                       dotClass = 'opacity-100 scale-100 bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.8)]';
+                    } else if (isOctaveHighlight) {
+                      dotClass = 'opacity-100 scale-90 bg-indigo-500/80 border border-indigo-300';
+                    } else if (isShow56 && !isClicked) {
+                      dotClass = 'opacity-100 scale-90 bg-slate-600 border border-slate-500';
+                    } else if (isQuizFound && !isClicked) {
+                      dotClass = 'opacity-100 scale-100 bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.8)] text-white';
                     }
-                    if (isOctaveHighlight && !isClicked) dotClass = 'opacity-100 scale-90 bg-indigo-500/80 border border-indigo-300';
+
                     if (mode === 'chord') {
                       if (isRootColor) dotClass = 'opacity-100 scale-100 bg-rose-500 shadow-[0_0_10px_rgba(244,63,94,0.8)] border border-rose-400';
                       else if (isChordTarget) dotClass = 'opacity-100 scale-100 bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.8)]';
@@ -261,7 +312,7 @@ export function FretboardTool() {
                         className={`flex-1 flex justify-center items-center h-full cursor-pointer relative border-r border-slate-700 ${f === 0 ? 'border-r-4 border-r-slate-300 bg-slate-900/40' : 'hover:bg-white/5'}`}
                       >
                         <div className={`w-5 h-5 rounded-full flex items-center justify-center transition-all duration-200 text-[10px] font-bold text-white z-30 ${dotClass}`}>
-                          {(isClicked || isOctaveHighlight || isChordTarget) && label}
+                          {(isClicked || isOctaveHighlight || isChordTarget || isShow56 || isQuizFound) && label}
                         </div>
                         
                         {/* Fret Markers */}
@@ -286,8 +337,66 @@ export function FretboardTool() {
     );
   };
 
+  const getTotalOctaves = (pitchClass: number) => {
+    let count = 0;
+    STRINGS.forEach((openPitch) => {
+      for (let f = 0; f <= FRETS; f++) {
+        if ((openPitch + f) % 12 === pitchClass) count++;
+      }
+    });
+    return count;
+  };
+
   const getInfoDisplay = () => {
     if (mode === 'absolute') {
+      if (absoluteMode === 'octaveQuiz') {
+        if (quizTargetPitch !== null) {
+          const total = getTotalOctaves(quizTargetPitch);
+          const found = quizFoundPos.length;
+          const isWon = found === total;
+          return (
+             <div className="flex flex-col items-center animate-in slide-in-from-top-2">
+              <div className="text-2xl font-black text-emerald-600 mb-1">尋找八度音： {getNoteName(quizTargetPitch)}</div>
+              <div className="text-sm font-medium text-slate-500 mb-2">
+                {isWon ? '🎉 恭喜！你找到了所有的八度音！' : `進度: ${found} / ${total}`}
+              </div>
+              {isWon && (
+                <div className="flex items-center gap-2 mt-2">
+                  <button
+                    onClick={() => {
+                      let nextPitch = Math.floor(Math.random() * 12);
+                      if (nextPitch === quizTargetPitch) {
+                        nextPitch = (nextPitch + 1) % 12;
+                      }
+                      setQuizTargetPitch(nextPitch);
+                      setQuizFoundPos([]);
+                    }}
+                    className="px-4 py-2 bg-emerald-500 hover:bg-emerald-600 active:bg-emerald-700 text-white font-bold rounded-lg transition-colors shadow"
+                  >
+                    下一題 (隨機產生)
+                  </button>
+                  <p className="text-xs text-slate-400">或直接點擊指板上的音符開始新一題</p>
+                </div>
+              )}
+            </div>
+          );
+        }
+        return (
+          <div className="flex flex-col items-center text-center animate-in slide-in-from-top-2">
+            <div className="text-slate-400 font-medium">請隨機點擊一個位置作為測驗起點</div>
+            <button
+               onClick={() => {
+                 setQuizTargetPitch(Math.floor(Math.random() * 12));
+                 setQuizFoundPos([]);
+               }}
+               className="mt-3 px-4 py-2 bg-slate-700 hover:bg-slate-600 active:bg-slate-500 text-slate-200 font-bold rounded-lg transition-colors border border-slate-600 text-sm"
+            >
+              或產生隨機目標音
+            </button>
+          </div>
+        );
+      }
+
       if (selectedPos.length === 1) {
         const p = selectedPos[0];
         const pitch = STRINGS[p.stringIdx] + p.fret;
@@ -399,6 +508,44 @@ export function FretboardTool() {
               和弦
             </button>
           </div>
+
+          {/* Absolute Sub Mode Selector */}
+          {mode === 'absolute' && (
+            <div className="mt-3 flex flex-wrap gap-2 p-1.5 sm:p-2 bg-slate-200 rounded-xl justify-center items-center">
+              <div className="flex bg-slate-100 p-1 rounded-lg">
+                 <button
+                   onClick={() => setAbsoluteMode('explore')}
+                   className={`py-1 xl-py-1.5 px-3 rounded-md text-xs font-bold transition-all ${
+                     absoluteMode === 'explore' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'
+                   }`}
+                 >
+                   探索模式
+                 </button>
+                 <button
+                   onClick={() => setAbsoluteMode('octaveQuiz')}
+                   className={`py-1 xl-py-1.5 px-3 rounded-md text-xs font-bold transition-all ${
+                     absoluteMode === 'octaveQuiz' ? 'bg-white text-emerald-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'
+                   }`}
+                 >
+                   找八度測驗
+                 </button>
+              </div>
+
+              {absoluteMode === 'explore' && (
+                <button
+                  onClick={() => setShow56Strings(!show56Strings)}
+                  className={`py-1 pl-3 pr-2 flex items-center gap-1.5 rounded-lg text-xs font-bold transition-all border ${
+                    show56Strings ? 'bg-indigo-50 border-indigo-200 text-indigo-700' : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'
+                  }`}
+                >
+                  <div className={`w-3 h-3 rounded-full border flex items-center justify-center ${show56Strings ? 'border-indigo-500 bg-indigo-500' : 'border-slate-300'}`}>
+                    {show56Strings && <div className="w-1.5 h-1.5 bg-white rounded-full" />}
+                  </div>
+                  顯示 5,6 弦全音
+                </button>
+              )}
+            </div>
+          )}
 
           {/* Chord Type Selector */}
           {mode === 'chord' && (

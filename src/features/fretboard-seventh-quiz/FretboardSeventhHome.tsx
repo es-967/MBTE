@@ -3,86 +3,76 @@ import { Card, CardContent, CardTitle } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { useGameStore, defaultProgress } from '../../store/useGameStore';
 import { ModuleStats } from '../../components/platform/ModuleStats';
+import { SeventhPosition, POSITIONS_LIST, POSITION_NAMES } from './chordDefs';
 
-export type MajorScaleMode = 'memorize' | 'recall' | 'random' | 'hell';
-export type CagedShape = 'C' | 'A' | 'G' | 'E' | 'D';
+export type FretboardSeventhMode = 'memorize' | 'recall' | 'random' | 'hell';
 
-interface MajorScaleHomeProps {
-  onStartQuiz: (mode: MajorScaleMode, shape?: CagedShape) => void;
+interface FretboardSeventhHomeProps {
+  onStartQuiz: (mode: FretboardSeventhMode, position?: SeventhPosition) => void;
   onHome: () => void;
 }
 
-export function MajorScaleHome({ onStartQuiz, onHome }: MajorScaleHomeProps) {
+export function FretboardSeventhHome({ onStartQuiz, onHome }: FretboardSeventhHomeProps) {
   const { progress } = useGameStore();
-  const moduleProgress = progress['fretboard-major-scale'] || defaultProgress;
+  const moduleProgress = progress['fretboard-seventh'] || defaultProgress;
   const metadata = moduleProgress.customMetadata || {};
   const cleared = metadata.cleared || {};
   const streaks = metadata.streaks || {};
 
-  const SHAPE_ORDER: CagedShape[] = ['C', 'A', 'G', 'E', 'D'];
+  const [selectedPosMem, setSelectedPosMem] = useState<SeventhPosition>(POSITIONS_LIST.find(p => !cleared[`memorize_${p}`]) || 'pos1');
+  const [selectedPosRec, setSelectedPosRec] = useState<SeventhPosition>(POSITIONS_LIST.find(p => !cleared[`recall_${p}`]) || 'pos1');
 
-  const [selectedShapeMem, setSelectedShapeMem] = useState<CagedShape>(SHAPE_ORDER.find(s => !cleared[`memorize_${s}`]) || 'C');
-  const [selectedShapeRec, setSelectedShapeRec] = useState<CagedShape>(SHAPE_ORDER.find(s => !cleared[`recall_${s}`]) || 'C');
-
-  const shapes: { id: CagedShape; name: string }[] = [
-    { id: 'C', name: 'C 型 (以第5弦為主音)' },
-    { id: 'A', name: 'A 型 (以第5弦為主音)' },
-    { id: 'G', name: 'G 型 (以第6弦為主音)' },
-    { id: 'E', name: 'E 型 (以第6弦為主音)' },
-    { id: 'D', name: 'D 型 (以第4弦為主音)' },
-  ];
-
-  const isMemUnlocked = (shape: CagedShape) => {
-    const idx = SHAPE_ORDER.indexOf(shape);
+  const isMemUnlocked = (pos: SeventhPosition) => {
+    const idx = POSITIONS_LIST.indexOf(pos);
     if (idx === 0) return true;
-    return !!cleared[`recall_${SHAPE_ORDER[idx - 1]}`]; // 必須先通關上一個形狀的主音推算
+    return !!cleared[`recall_${POSITIONS_LIST[idx - 1]}`];
   };
 
-  const isRecUnlocked = (shape: CagedShape) => {
-    return !!cleared[`memorize_${shape}`]; // 必須先通關同一個形狀的形狀記憶
+  const isRecUnlocked = (pos: SeventhPosition) => {
+    return !!cleared[`memorize_${pos}`];
   };
 
   const isRandomUnlocked = () => {
-    return !!cleared[`recall_D`]; // 必須通關所有形狀
+    return !!cleared[`recall_pos5`];
   };
 
-  const renderShapeSelector = (
+  const renderPositionSelector = (
     mode: 'memorize' | 'recall', 
-    selected: CagedShape, 
-    setSelected: (s: CagedShape) => void,
-    unlockCheck: (s: CagedShape) => boolean
+    selected: SeventhPosition, 
+    setSelected: (p: SeventhPosition) => void,
+    unlockCheck: (p: SeventhPosition) => boolean
   ) => {
     return (
-      <div className="flex flex-wrap gap-2 sm:gap-3">
-        {SHAPE_ORDER.map(shape => {
-          const unlocked = unlockCheck(shape);
-          const isClear = cleared[`${mode}_${shape}`];
-          const currentStreak = streaks[`${mode}_${shape}`] || 0;
-          const isSelected = selected === shape;
+      <div className="flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-2">
+        {POSITIONS_LIST.map(pos => {
+          const unlocked = unlockCheck(pos);
+          const isClear = cleared[`${mode}_${pos}`];
+          const currentStreak = streaks[`${mode}_${pos}`] || 0;
+          const isSelected = selected === pos;
 
           return (
             <button
-              key={shape}
-              onClick={() => unlocked && setSelected(shape)}
+              key={pos}
+              onClick={() => unlocked && setSelected(pos)}
               disabled={!unlocked}
               className={`
-                flex-1 min-w-[55px] sm:min-w-[60px] py-1.5 sm:py-2 px-1 rounded-xl text-xs sm:text-sm font-bold border-2 transition-all flex flex-col items-center justify-center gap-0.5 sm:gap-1
+                flex-1 min-w-[100px] py-2 px-1 rounded-xl text-xs sm:text-sm font-bold border-2 transition-all flex flex-col items-center justify-center gap-1
                 ${!unlocked ? 'bg-slate-100 border-slate-200 text-slate-400 opacity-50 cursor-not-allowed' : 
-                  isSelected ? 'bg-indigo-600 border-indigo-700 text-white shadow-md' : 
+                  isSelected ? 'bg-amber-600 border-amber-700 text-white shadow-md' : 
                   isClear ? 'bg-emerald-50 border-emerald-200 text-emerald-700 hover:bg-emerald-100' :
-                  `bg-white border-slate-200 text-slate-700 hover:border-indigo-300`}
+                  `bg-white border-slate-200 text-slate-700 hover:border-amber-300`}
               `}
             >
-              <div className="flex items-center gap-1">
-                {!unlocked ? '🔒' : isClear ? '✨' : ''} {shape}
+              <div className="flex items-center gap-1 text-[11px] sm:text-[13px]">
+                {!unlocked ? '🔒' : isClear ? '✨' : ''} {POSITION_NAMES[pos]}
               </div>
               {unlocked && !isClear && (
-                <div className={`text-[8px] sm:text-[10px] ${isSelected ? 'text-indigo-200' : 'text-slate-400'}`}>
+                <div className={`text-[10px] ${isSelected ? 'text-amber-200' : 'text-slate-400'}`}>
                   {Math.min(3, currentStreak)}/3
                 </div>
               )}
               {isClear && (
-                <div className={`text-[8px] sm:text-[10px] ${isSelected ? 'text-indigo-100' : 'text-emerald-500'}`}>
+                <div className={`text-[10px] ${isSelected ? 'text-amber-100' : 'text-emerald-500'}`}>
                   READY
                 </div>
               )}
@@ -103,8 +93,8 @@ export function MajorScaleHome({ onStartQuiz, onHome }: MajorScaleHomeProps) {
       </button>
 
       <div className="text-center space-y-2 mb-6 sm:mb-8">
-        <h2 className="text-2xl sm:text-4xl font-display font-black text-slate-900 tracking-tight">大調音階練習</h2>
-        <p className="text-slate-500 font-medium text-xs sm:text-base px-2">依序完成各個形狀的連勝試煉，解鎖下一階段</p>
+        <h2 className="text-2xl sm:text-4xl font-display font-black text-slate-900 tracking-tight">七和弦練習</h2>
+        <p className="text-slate-500 font-medium text-xs sm:text-base px-2">熟悉各大把位的七和弦指型，成為指板和弦大師</p>
       </div>
 
       <ModuleStats 
@@ -123,59 +113,59 @@ export function MajorScaleHome({ onStartQuiz, onHome }: MajorScaleHomeProps) {
         streakIconOverride="🔥"
         customProgressValue={Math.min(100, Math.floor(((moduleProgress.level - 1) / 11) * 100))}
         customProgressMax={100}
-        customProgressLeftText={<span className="text-indigo-600 font-bold">檢定進度</span>}
+        customProgressLeftText={<span className="text-amber-600 font-bold">檢定進度</span>}
         customProgressCenterText={<span>距離大師還差 <span className="text-slate-700 font-bold">{Math.max(0, 11 - (moduleProgress.level - 1))}</span> 個解鎖項目</span>}
         customProgressRightText={<span className="text-slate-400">大師</span>}
       />
 
       <div className="grid md:grid-cols-2 gap-6">
         {/* Memory Level */}
-        <Card className="border-2 border-indigo-100 shadow-sm hover:shadow-md transition-shadow">
-          <div className="p-4 sm:p-6 border-b border-slate-100 bg-indigo-50/50 text-center sm:text-left">
+        <Card className="border-2 border-amber-100 shadow-sm hover:shadow-md transition-shadow">
+          <div className="p-4 sm:p-6 border-b border-slate-100 bg-amber-50/50 text-center sm:text-left">
             <CardTitle className="text-base sm:text-xl font-display flex items-center justify-center sm:justify-start gap-2 text-slate-800">
               <span className="text-xl sm:text-2xl">👀</span> 1. 形狀記憶
             </CardTitle>
           </div>
           <CardContent className="space-y-4 sm:space-y-6 pt-4 sm:pt-6">
             <p className="text-xs sm:text-sm font-medium text-slate-600">
-              完整顯示音階位置與名稱，提示結束後請憑記憶填寫完整位置。<br/>
-              <span className="text-indigo-600 font-bold block mt-1">連續答對 3 次解鎖推算</span>
+              顯示該 Position 的某個七和弦指型 (maj7, 7, m7, m7b5 等)，考驗你是否能認得它是哪一個和弦。<br/>
+              <span className="text-amber-600 font-bold block mt-1">連續答對 3 次解鎖推算</span>
             </p>
             <div className="space-y-2 sm:space-y-3">
-              <label className="text-xs sm:text-sm font-semibold text-slate-700">選擇形狀：</label>
-              {renderShapeSelector('memorize', selectedShapeMem, setSelectedShapeMem, isMemUnlocked)}
+              <label className="text-xs sm:text-sm font-semibold text-slate-700">選擇把位：</label>
+              {renderPositionSelector('memorize', selectedPosMem, setSelectedPosMem, isMemUnlocked)}
             </div>
             <Button 
-              className="w-full h-11 sm:h-12 text-sm sm:text-base border-b-4 border-indigo-700 active:border-b-0 active:translate-y-1 transition-all" 
-              onClick={() => onStartQuiz('memorize', selectedShapeMem)}
+              className="w-full h-11 sm:h-12 text-sm sm:text-base border-b-4 border-amber-700 bg-amber-600 hover:bg-amber-700 text-white active:border-b-0 active:translate-y-1 transition-all" 
+              onClick={() => onStartQuiz('memorize', selectedPosMem)}
             >
-              開始記憶挑戰 ({selectedShapeMem})
+              開始記憶挑戰 ({POSITION_NAMES[selectedPosMem]})
             </Button>
           </CardContent>
         </Card>
 
         {/* Recall Level */}
-        <Card className={`border-2 ${isRecUnlocked('C') ? 'border-emerald-100' : 'border-slate-200'} shadow-sm hover:shadow-md transition-shadow`}>
-          <div className={`p-4 sm:p-6 border-b border-slate-100 text-center sm:text-left ${isRecUnlocked('C') ? 'bg-emerald-50/50' : 'bg-slate-50'}`}>
-            <CardTitle className={`text-base sm:text-xl font-display flex items-center justify-center sm:justify-start gap-2 ${isRecUnlocked('C') ? 'text-slate-800' : 'text-slate-400'}`}>
-              <span className="text-xl sm:text-2xl">{isRecUnlocked('C') ? '🧩' : '🔒'}</span> 2. 主音推算
+        <Card className={`border-2 ${isRecUnlocked('pos1') ? 'border-emerald-100' : 'border-slate-200'} shadow-sm hover:shadow-md transition-shadow`}>
+          <div className={`p-4 sm:p-6 border-b border-slate-100 text-center sm:text-left ${isRecUnlocked('pos1') ? 'bg-emerald-50/50' : 'bg-slate-50'}`}>
+            <CardTitle className={`text-base sm:text-xl font-display flex items-center justify-center sm:justify-start gap-2 ${isRecUnlocked('pos1') ? 'text-slate-800' : 'text-slate-400'}`}>
+              <span className="text-xl sm:text-2xl">{isRecUnlocked('pos1') ? '🧩' : '🔒'}</span> 2. 和弦建構
             </CardTitle>
           </div>
           <CardContent className="space-y-4 sm:space-y-6 pt-4 sm:pt-6">
             <p className="text-xs sm:text-sm font-medium text-slate-600">
-              直接給你主音位置，請在腦海中對應指定的音階形狀並完整填寫。<br/>
-              <span className="text-emerald-600 font-bold block mt-1">需先解鎖該形狀的形狀記憶</span>
+              顯示目標和弦名稱與其在該把位的根音位置，請你點擊出正確的按法。<br/>
+              <span className="text-emerald-600 font-bold block mt-1">需先解鎖該把位的形狀記憶</span>
             </p>
             <div className="space-y-2 sm:space-y-3">
-              <label className="text-xs sm:text-sm font-semibold text-slate-700">選擇形狀：</label>
-              {renderShapeSelector('recall', selectedShapeRec, setSelectedShapeRec, isRecUnlocked)}
+              <label className="text-xs sm:text-sm font-semibold text-slate-700">選擇把位：</label>
+              {renderPositionSelector('recall', selectedPosRec, setSelectedPosRec, isRecUnlocked)}
             </div>
             <Button 
-              className={`w-full h-11 sm:h-12 text-sm sm:text-base border-b-4 active:border-b-0 active:translate-y-1 transition-all ${isRecUnlocked(selectedShapeRec) ? 'bg-emerald-600 hover:bg-emerald-700 border-emerald-800 text-white' : 'bg-slate-300 border-slate-400 text-slate-500 cursor-not-allowed hover:bg-slate-300'}`}
-              disabled={!isRecUnlocked(selectedShapeRec)}
-              onClick={() => onStartQuiz('recall', selectedShapeRec)}
+              className={`w-full h-11 sm:h-12 text-sm sm:text-base border-b-4 active:border-b-0 active:translate-y-1 transition-all ${isRecUnlocked(selectedPosRec) ? 'bg-emerald-600 hover:bg-emerald-700 border-emerald-800 text-white' : 'bg-slate-300 border-slate-400 text-slate-500 cursor-not-allowed hover:bg-slate-300'}`}
+              disabled={!isRecUnlocked(selectedPosRec)}
+              onClick={() => onStartQuiz('recall', selectedPosRec)}
             >
-              {isRecUnlocked(selectedShapeRec) ? `開始推算挑戰 (${selectedShapeRec})` : '尚未解鎖'}
+              {isRecUnlocked(selectedPosRec) ? `開始建構挑戰 (${POSITION_NAMES[selectedPosRec]})` : '尚未解鎖'}
             </Button>
           </CardContent>
         </Card>
@@ -191,13 +181,13 @@ export function MajorScaleHome({ onStartQuiz, onHome }: MajorScaleHomeProps) {
             <div className="flex flex-col md:flex-row gap-4 sm:gap-6 items-center">
               <div className="flex-1 space-y-2 text-center md:text-left">
                 <p className="text-xs sm:text-sm font-medium text-slate-600">
-                  亂數選擇不同 Shape 的主音位置，請快速反應並填寫該形狀的完整音階位置。<br/>
+                  指板上隨機給出 Root 位置跟七和弦代號，請你快速點擊出正確的按法。<br/>
                   <span className={`${isRandomUnlocked() ? 'text-rose-600' : 'text-slate-400'} font-bold block mt-1`}>
-                    解鎖所有形狀主音推算後開啟
+                    解鎖所有把位的和弦建構後開啟
                   </span>
                 </p>
                 {isRandomUnlocked() && cleared['random'] && (
-                   <p className="text-amber-500 font-bold text-xs sm:text-sm">🏆 你已經制霸指板的大調音階！</p>
+                   <p className="text-amber-500 font-bold text-xs sm:text-sm">🏆 你已經制霸指板的七和弦！</p>
                 )}
               </div>
               <div className="w-full md:w-auto flex flex-col gap-3">

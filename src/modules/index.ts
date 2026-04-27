@@ -6,8 +6,33 @@ import { StepModule } from './StepModule';
 import { SeventhModule } from './SeventhModule';
 import { FretboardStepModule } from './FretboardStepModule';
 import { FretboardMajorScaleModule } from './FretboardMajorScaleModule';
+import { FretboardIntervalModule } from './FretboardIntervalModule';
+import { FretboardTriadModule } from './FretboardTriadModule';
+import { FretboardSeventhModule } from './FretboardSeventhModule';
 
 export const TRAINING_MODULES: TrainingModule[] = [
+  {
+    id: 'fretboard-seventh',
+    title: '指板七和弦',
+    description: '熟悉各大把位的七和弦指型，成為指板和弦大師',
+    icon: '四',
+    unlockLevel: 0,
+    difficulty: 'advanced',
+    category: 'fretboard',
+    estimatedMinutes: 5,
+    component: FretboardSeventhModule,
+  },
+  {
+    id: 'fretboard-triad',
+    title: '指板三和弦',
+    description: '熟悉各大把位的三和弦指型，建立和弦與音階的視覺連結',
+    icon: '弦',
+    unlockLevel: 0,
+    difficulty: 'intermediate',
+    category: 'fretboard',
+    estimatedMinutes: 5,
+    component: FretboardTriadModule,
+  },
   {
     id: 'scale-practice',
     title: '音階練習',
@@ -84,5 +109,16 @@ export const TRAINING_MODULES: TrainingModule[] = [
     category: 'fretboard',
     estimatedMinutes: 5,
     component: FretboardMajorScaleModule,
+  },
+  {
+    id: 'fretboard-interval',
+    title: '指板音程判斷',
+    description: '在指板上推算與找出各個音程，強化相對音感',
+    icon: '距',
+    unlockLevel: 0,
+    difficulty: 'intermediate',
+    category: 'fretboard',
+    estimatedMinutes: 5,
+    component: FretboardIntervalModule,
   },
 ];
